@@ -145,6 +145,23 @@ void usercontrol()
     {
       intake.stop(hold);
     }
+
+
+    //lift controls
+    if (con.ButtonUp.pressing() && con.ButtonDown.pressing())
+    {
+      lift.spin(fwd,100,pct);
+      f1loop = false;
+    }
+    else if (!f1loop)
+    {
+      lift.stop(hold);
+    }
+    if (con.ButtonRight.pressing() && con.ButtonLeft.pressing())
+    {
+      lift.spin(fwd, -100, pct);
+      f1loop = true;
+    }
   }
   wait (20, msec); //prevent system overload 
 }
