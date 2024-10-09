@@ -80,7 +80,7 @@ void pre_auton(void) {
 }
 
 void testing(){
-  Drive.move(10, 15);
+  Drive.move(12.5, 15);
 }
 void (*autonsList[])() =
 {
@@ -148,7 +148,7 @@ void usercontrol()
 
 
     //lift controls
-    if (con.ButtonUp.pressing() && con.ButtonDown.pressing())
+    if (con.ButtonL1.pressing())
     {
       lift.spin(fwd,100,pct);
       f1loop = false;
@@ -157,7 +157,7 @@ void usercontrol()
     {
       lift.stop(hold);
     }
-    if (con.ButtonRight.pressing() && con.ButtonLeft.pressing())
+    if (con.ButtonL2.pressing())
     {
       lift.spin(fwd, -100, pct);
       f1loop = true;

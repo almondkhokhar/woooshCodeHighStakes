@@ -28,9 +28,9 @@ double drivetrainObj::getEncoderValue()
 void drivetrainObj::move(double targetDistance, double timeout)
 {
     //arbitrary number used to get the majority of the distance travelled by driving at a proportional speed to the distance remaining to travel
-    double distKp = 470.0;
+    double distKp = 1000.0;
     //arbitrary number used to keep the robot driving in a straight line by adjusting the difference in speed of the two sides of the drivetrain
-    double turnKp = 470.0;
+    double turnKp = 0.0;
 
     double distKi = 0.0;
 
