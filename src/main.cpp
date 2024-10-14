@@ -162,7 +162,12 @@ void usercontrol()
       lift.spin(fwd, -100, pct);
       f1loop = true;
     }
+    //clamp control
+    if (con.ButtonA.pressing()){
+      
+    }
   }
+
   wait (20, msec); //prevent system overload 
 }
 

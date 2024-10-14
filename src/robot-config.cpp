@@ -24,7 +24,7 @@ inertial Inert2 = inertial(PORT8);
 //declares the inertial sensors' ports
 drivetrainObj Drive(3.25, .75);
 //declares the parameters for the Drive object which are the wheel diameter and the gear ratio
-
+pneumatics clamp = pneumatics(Brain.ThreeWirePort.C);
 /**
 * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
 *

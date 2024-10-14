@@ -5,7 +5,7 @@ using namespace vex;
 
 void vexcodeInit(void);
 
-
+extern vex::pneumatics clamp;
 extern vex::brain Brain;
 extern vex::controller con;
 extern vex::motor left1;

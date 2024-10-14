@@ -23,7 +23,7 @@ double drivetrainObj::getRightEncoderValue()
 
 double drivetrainObj::getEncoderValue()
 {
-    return (getLeftEncoderValue() + getRightEncoderValue()) / 2.0;
+    return ((getLeftEncoderValue() + getRightEncoderValue()) / 2.0);
 }
 void drivetrainObj::move(double targetDistance, double timeout)
 {
@@ -59,7 +59,7 @@ void drivetrainObj::move(double targetDistance, double timeout)
         // limits the speed so as the robot gets closer to where you want it it slows down the speed and doesn't overshoot the distance
         prevError=error;
         turnPrevError=turnErr;
-        double currentDistance = (Drive.getEncoderValue() - startPos) * M_PI / 180 * wheelDiameter / 2;
+        double currentDistance = (Drive.getEncoderValue() - startPos) * M_PI / 180 * 3.25 / 2;
         error = targetDistance - currentDistance;
         // calculates the difference between our current angle and our initial angle
         double turnErr = startAng - Inertial.rotation(deg);
