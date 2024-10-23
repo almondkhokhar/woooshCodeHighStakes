@@ -22,7 +22,9 @@ motor_group rightdrive(right1, right2, right3);
 inertial Inertial = inertial(PORT2);
 inertial Inert2 = inertial(PORT8);
 //declares the inertial sensors' ports
-drivetrainObj Drive(3.25, .75);
+vex::motor_group leftDrive_Group = motor_group(left1, left2, left3);
+vex::motor_group rightDrive_Group = motor_group(right1, right2, right3);
+drivetrainObj Drive (3.25, .75);
 //declares the parameters for the Drive object which are the wheel diameter and the gear ratio
 pneumatics clamp = pneumatics(Brain.ThreeWirePort.C);
 /**

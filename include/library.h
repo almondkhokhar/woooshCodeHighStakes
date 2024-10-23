@@ -22,9 +22,6 @@ extern double angularDistanceToLinearDistance(double angularDistance, double dia
  * @param max 
  * @return double 
  */
-extern double clamp(double value, double min, double max); 
-extern double clamp(double value, double min); 
-extern double clamp(double value, double max);
 
 class toggleBoolObject
 {
