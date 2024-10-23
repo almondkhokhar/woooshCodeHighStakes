@@ -26,6 +26,8 @@ extern vex::motor_group rightdrive;
 extern vex::inertial Inertial;
 extern vex::inertial Inert2;
 //declares inertial sensors, we have 2 so if one disconnects or has an error we can override it's input and use the second inertial sensor instead
+extern vex::motor_group leftDrive_Group;
+extern vex::motor_group rightDrive_Group;
 extern drivetrainObj Drive;
 //declares the drivetrain as an object
 #endif

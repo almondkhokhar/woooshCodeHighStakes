@@ -1,147 +1,185 @@
 #include "vex.h"
 using namespace vex;
 
+//**********************//
+// constructor function //
+//**********************//
 
-//function to declare drivetrain parameters
-drivetrainObj::drivetrainObj(double wheelDiameterInput, double gearLPlusRatioInput)
+drivetrainObj::drivetrainObj(double wheelDiam, double gR)
 {
-    wheelDiameter = wheelDiameterInput;
-    gearRatio = gearLPlusRatioInput;
+    wheelDiameter = wheelDiam;
+    gearRatio = gR;
 }
 
+//****************//
+// public members //
+//****************//
 
-//encoder values used to calculate distance travelled 
-double drivetrainObj::getLeftEncoderValue()
+void drivetrainObj::runLeftSide(double voltage)
 {
-    return leftdrive.position(deg);
+    leftDrive_Group.spin(fwd, nearbyint(voltage), vex::voltageUnits::mV);
 }
 
-double drivetrainObj::getRightEncoderValue()
+void drivetrainObj::runRightSide(double voltage)
 {
-    return rightdrive.position(deg);
+    rightDrive_Group.spin(fwd, nearbyint(voltage), vex::voltageUnits::mV);
 }
 
-double drivetrainObj::getEncoderValue()
+void drivetrainObj::stopLeftSide(vex::brakeType brakeType)
 {
-    return ((getLeftEncoderValue() + getRightEncoderValue()) / 2.0);
+    leftDrive_Group.stop(brakeType);
 }
-void drivetrainObj::move(double targetDistance, double timeout)
+
+void drivetrainObj::stopRightSide(vex::brakeType brakeType)
 {
-    //arbitrary number used to get the majority of the distance travelled by driving at a proportional speed to the distance remaining to travel
-    double distKp = 1000.0;
-    //arbitrary number used to keep the robot driving in a straight line by adjusting the difference in speed of the two sides of the drivetrain
-    double turnKp = 0.0;
+    rightDrive_Group.stop(brakeType);
+}
 
-    double distKi = 0.0;
+void drivetrainObj::setBrakeType(vex::brakeType brakeType)
+{
+    leftDrive_Group.setStopping(brakeType);
+    rightDrive_Group.setStopping(brakeType);
+}
 
-    double turnKi = 0.0;
+void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double timeout, bool correctHeading)
+{
+    // initalize objects for PID control
+    MiniPID distanceControl(1600, 5, 3000);
+    MiniPID headingControl(300, 3, 1200);
+    // configure pid controls
+    distanceControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+    headingControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
 
-    double distKd = 0.0;
+    // track inital values to use for calculating total change
+    double startPos = getDriveEncoderValue();
+    double startAngle = Inertial.rotation(deg);
+    double startTime = vex::timer::system();
 
-    double turnKd = 0.0;
-    // records a starting position of the bot
-    double startAng = Inertial.rotation(deg);
-    double startPos = Drive.getEncoderValue();
-    // establishes when we started the procedure
-    int startTime = vex::timer::system();
-    double errorSum = 0;
-    double turnErrorSum = 0;
-    bool firstLoop = true;
-    double turnPrevError;
-    double prevError = 0;
-    double turnErr = 0;
-    double error = targetDistance;
-    double velocity;
-    double turnVelocity;
-    // limits the time the procedure can run
-    while (vex::timer::system() - startTime < timeout * 1000)
+    // condition exits loops after some amount of time has passed
+    while (vex::timer::system() - startTime <= timeout * 1000)
     {
-        // limits the speed so as the robot gets closer to where you want it it slows down the speed and doesn't overshoot the distance
-        prevError=error;
-        turnPrevError=turnErr;
-        double currentDistance = (Drive.getEncoderValue() - startPos) * M_PI / 180 * 3.25 / 2;
-        error = targetDistance - currentDistance;
-        // calculates the difference between our current angle and our initial angle
-        double turnErr = startAng - Inertial.rotation(deg);
-        errorSum += distKi * error * .02;
-        turnErrorSum += turnErr * turnKi * .02;
-        velocity = (prevError-error)/.02;
-        turnVelocity = (turnPrevError-turnErr)/.02;
-        double speed = error * distKp + errorSum  -  velocity * distKd;
-        double turnSpeed = turnErr * turnKp + turnErrorSum - turnVelocity * turnKd;
-        // set the drive to the correct speed
-        rightdrive.spin(fwd, speed - turnSpeed, vex::voltageUnits::mV);
-        leftdrive.spin(fwd, speed + turnSpeed, vex::voltageUnits::mV);
+        // calculate the total distance the encoder has traveled in degrees
+        double encoderDistance = getDriveEncoderValue() - startPos;
+        // converts the encoder distance to inches traveled
+        double travelDistance = angularDistanceToLinearDistance(encoderDistance, wheelDiameter, gearRatio);
+        // stores the current heading of the robot
+        double actualAngle = Inertial.rotation(deg);
+        // gets ouptput from pid controller for travel speed
+        double output = distanceControl.getOutput(travelDistance, targetDistance);
+        // gets output from pid controller for turning speed
+        double correctionFactor = headingControl.getOutput(actualAngle, startAngle);
 
-        wait(20, msec);
-    }
-    leftdrive.stop(brake);
-    rightdrive.stop(brake);
-}
-
-void drivetrainObj::swing(double targetDistance, double timeout, double turnMult, double distKp, bool RightSide)
-{
-
-    // records a starting position of the bot
-    double startPos = (right1.position(deg) + left1.position(deg)) / 2.0;
-    // records a starting position of the bot 
-    int startTime = vex::timer::system();
-    // limits the time the procedure can run
-    while (vex::timer::system() - startTime < timeout * 1000)
-    {
-        // limits the speed so as the robot gets closer to where you want it it slows down the speed and doesn't overshoot the distance
-        double speed = (targetDistance - (Drive.getEncoderValue() - startPos) * M_PI / 180 * wheelDiameter / 2) * distKp;
-        // set the drive to the correct speed
-        if (RightSide) {
-        rightdrive.spin(fwd, speed * turnMult, pct);
-        leftdrive.spin(fwd, speed, pct);
+        if (correctHeading)
+        {
+            runLeftSide(output + correctionFactor);
+            runRightSide(output - correctionFactor);
         }
         else
         {
-        rightdrive.spin(fwd, speed, pct); 
-        leftdrive.spin(fwd, speed * turnMult, pct);
-
+            runLeftSide(output);
+            runRightSide(output);
         }
-        
-        wait(10, msec);
+        wait(20, msec);
     }
-    leftdrive.stop();
-    rightdrive.stop();
+    stopLeftSide(vex::brakeType::coast);
+    stopRightSide(vex::brakeType::coast);
 }
 
-void drivetrainObj::turn(double targetAngle, double timeout)
+void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double timeout)
 {
-    // establishes when the turn started
-    int startTime = vex::timer::system();
-    double speed;
-    double Kp = .28;
-    double Ki = .28;
-    double Kd = .28;
-    double error;
-    double errorSum=0;
-    double prevError;
-    double velocity;
-    bool firstLoop = true;
-    // limits the time so that it doesn't waste time fixing marginal error
-    while (vex::timer::system() - startTime < timeout * 1000)
+    moveDistance(targetDistance, maxSpeed, timeout, true);
+}
+
+void drivetrainObj::swing(double targetDistance, double maxSpeed, double targetAngle, double timeout)
+{
+    // initalize objects for PID control
+    MiniPID distanceControl(1100, 5, 5000);
+    MiniPID headingControl(300, 2, 1200);
+    // configure pid controls
+    distanceControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+    headingControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+
+    // track inital values to use for calculating total change
+    double startPos = getDriveEncoderValue();
+    double startAngle = Inertial.rotation(deg);
+    double startTime = vex::timer::system();
+    double currTargetAngle = Inertial.rotation(deg);
+
+    // condition exits loops after some amount of time has passed
+    while (vex::timer::system() - startTime <= timeout * 1000)
     {
-        if (firstLoop){
-        prevError=error;
-        firstLoop=false;
-        }
-        else {
-        prevError= error;
-        }
-        errorSum += error;
-        velocity = (error-prevError)/.01;
-        error =(targetAngle - Inertial.rotation(deg));
-        speed = error * Kp + errorSum * Ki - velocity * Kd;
-        rightdrive.spin(fwd, -speed, pct);
-        leftdrive.spin(fwd, speed, pct);
-        wait(10, msec);
-        // limits the speed so as the robot gets closer to where you want it it slows down the speed and doesn't overshoot the distance
+        // calculate the total distance the encoder has traveled in degrees
+        double encoderDistance = getDriveEncoderValue() - startPos;
+        // converts the encoder distance to inches traveled
+        double travelDistance = angularDistanceToLinearDistance(encoderDistance, wheelDiameter, gearRatio);
+        // stores the current heading of the robot
+        double actualAngle = Inertial.rotation(deg);
+        // cacluates the percent of distance driven to target distance
+        double fracComplete = travelDistance / targetDistance;
+        // sets current target angle to that percentage between the start agnle and the final target angle
+        currTargetAngle = (targetAngle - startAngle) * fracComplete + startAngle;
+        // gets ouptput from pid controller for travel speed
+        double output = distanceControl.getOutput(travelDistance, targetDistance);
+        // gets output from pid controller for turning speed
+        double correctionFactor = headingControl.getOutput(actualAngle, currTargetAngle);
+
+        // sends command to run motors at desired speeds
+        runLeftSide(output + correctionFactor);
+        runRightSide(output - correctionFactor);
+        wait(20, msec);
     }
-    // stops slowly opposed to abruptly
-    leftdrive.stop();
-    rightdrive.stop();
+    stopLeftSide(vex::brakeType::coast);
+    stopRightSide(vex::brakeType::coast);
+}
+
+void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
+{
+    // initalize object for PID control
+    MiniPID angleControl(350, 20, 3000);
+    // configure PID controller
+    angleControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+    angleControl.setMaxIOutput(0);
+    // store the inital time
+    double startTime = vex::timer::system();
+
+    // condition exits loops after some amount of time has passed
+    while (vex::timer::system() - startTime <= timeout * 1000)
+    {
+        // stores the robots current heading
+        double actualAngle = Inertial.rotation(deg);
+        // gets output from PID controller for desired turn spped
+        double output = angleControl.getOutput(actualAngle, targetAngle);
+
+        // only introduce the integral portion of the PID if the robot is within 5 degrees of the target
+        // this helps to prevent overshoot and integral windup
+        if (fabs(targetAngle - actualAngle) < 5)
+        {
+            angleControl.setMaxIOutput(2000);
+        }
+        // set the motors to the desired speed
+        runLeftSide(output);
+        runRightSide(-output);
+        wait(10, msec);
+    }
+    stopLeftSide(vex::brakeType::coast);
+    stopRightSide(vex::brakeType::coast);
+}
+
+//*****************//
+// private members //
+//*****************//
+
+double drivetrainObj::getLeftDriveEncoderValue()
+{
+    return leftDrive_Group.position(deg);
+}
+
+double drivetrainObj::getRightDriveEncoderValue()
+{
+    return rightDrive_Group.position(deg);
+}
+
+double drivetrainObj::getDriveEncoderValue()
+{
+    return (getLeftDriveEncoderValue() + getRightDriveEncoderValue()) / 2;
 }

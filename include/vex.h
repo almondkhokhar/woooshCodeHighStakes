@@ -5,9 +5,10 @@
 
 #include "v5.h"
 #include "v5_vcs.h"
-
+#include "MiniPID.h"
 #include "robot-config.h"
 #include "drivetrain.h"
+#include "library.h"
 //include path
 #define waitUntil(condition)                                                   \
   do {                                                                         \

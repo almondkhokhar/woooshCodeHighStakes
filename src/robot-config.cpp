@@ -5,12 +5,12 @@ brain Brain;
 controller con;
 //declares the controller and brain
 motor right1 = motor(PORT11, ratio6_1, false);
-motor right2 = motor(PORT15, ratio6_1, false);
-motor right3 = motor(PORT16, ratio6_1, false);
+motor right2 = motor(PORT16, ratio6_1, false);
+motor right3 = motor(PORT14, ratio6_1, false);
 //declares ports, cartidges, and directions for right drive motors
-motor left1 = motor(PORT3, ratio6_1, true);
+motor left1 = motor(PORT1, ratio6_1, true);
 motor left2 = motor(PORT5,  ratio6_1, true);
-motor left3 = motor(PORT1,  ratio6_1, true);
+motor left3 = motor(PORT2,  ratio6_1, true);
 //declares ports, cartidges, and directions for left drive motors
 motor lift = motor(PORT21, false);
 //declares port and direction for lift motor

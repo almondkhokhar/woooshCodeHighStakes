@@ -80,7 +80,7 @@ void pre_auton(void) {
 }
 
 void testing(){
-  Drive.move(12.5, 15);
+  Drive.moveDistance(10,100,15);
 }
 void (*autonsList[])() =
 {
@@ -162,9 +162,22 @@ void usercontrol()
       lift.spin(fwd, -100, pct);
       f1loop = true;
     }
+    else if (!con.ButtonL1.pressing()){
+      lift.stop(hold);
+    }
     //clamp control
-    if (con.ButtonA.pressing()){
-      
+    if (con.ButtonY.pressing()){
+      if (f2loop){
+        clamp.open();
+      }
+      if (!f2loop){
+        clamp.close();
+      }
+      f3loop = true;
+    }
+    else if (f3loop){
+      f2loop = !f2loop;
+      f3loop = false;
     }
   }
 
