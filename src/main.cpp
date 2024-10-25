@@ -72,19 +72,76 @@ competition Competition;
 /*  function is only called once after the V5 has been powered on and        */
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
-
+int armup(){
+  lift.spin(fwd, 100, pct);
+  wait(.2, sec);
+  lift.spin(fwd,-100,pct);
+  wait(.1, sec);
+  lift.stop(hold);
+  return(0);
+}
+int armdown(){
+  lift.spin(fwd, -100, pct);
+  wait(.15, sec);
+  lift.spin(fwd,100,pct);
+  wait(.1, sec);
+  lift.stop(hold);
+  return(0);
+}
 void pre_auton(void) {
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
+void AWPRight(){
+  armup();
+  clamp.open();
+  Drive.swing(-25, 100, -60, 1);
+  Drive.moveDistance(-5, 100, .5);
+  clamp.close();
+  Drive.turn(-90, 100, .7);
+  intake.spin(fwd, 100, pct);
+  Drive.moveDistance(28, 20, 2);
+  Drive.moveDistance(-15, 100, .7);
+  Drive.turn(-180, 100, .7);
+  Drive.moveDistance(16, 70, .9);
+  Drive.moveDistance(-15, 100, .8);
+  Drive.turn(-155, 100, .5);
+  Drive.moveDistance(17, 100, .8);
+  Drive.moveDistance(-18, 100, 1);
+  Drive.turn(-270, 100, .8);
+  Drive.moveDistance(30, 70, 1.2);
+  // Drive.moveDistance(-43, 100, 1.2);
+  // Drive.turn(-45, 100, .7);
+  // Drive.moveDistance(10, 70, .8);
 
+}
+void AWPLeft(){
+  armup();
+  Drive.swing(-14.5, 100, 90, .9);
+  intake.spin(fwd,100,pct);
+  wait(.8,sec);
+  Drive.turn(150, 100,.7);
+  Drive.swing(20,100,35,1);
+  Drive.swing(40,100,-90, 1.1);
+  intake.stop();
+  clamp.open();
+  Drive.moveDistance(-10, 70, .8);
+  clamp.close();
+  intake.spin(fwd,100,pct);
+  Drive.turn(0,100,.8);
+  Drive.moveDistance(25,70, 1.2);
+
+
+}
 void testing(){
-  Drive.moveDistance(10,100,15);
+  Drive.turn(45,100, 2);
 }
 void (*autonsList[])() =
 {
-  testing,
+  // testing,
+  AWPRight,
+  AWPLeft,
   
 
 };

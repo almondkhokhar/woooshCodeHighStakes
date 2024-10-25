@@ -19,8 +19,8 @@ motor intake = motor(PORT9, false);
 motor_group leftdrive(left1, left2, left3);
 motor_group rightdrive(right1, right2, right3);
 //declares the motors in each motor group
-inertial Inertial = inertial(PORT2);
-inertial Inert2 = inertial(PORT8);
+inertial Inertial = inertial(PORT7);
+inertial Inert2 = inertial(PORT10);
 //declares the inertial sensors' ports
 vex::motor_group leftDrive_Group = motor_group(left1, left2, left3);
 vex::motor_group rightDrive_Group = motor_group(right1, right2, right3);

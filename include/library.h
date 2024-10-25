@@ -44,7 +44,7 @@ public:
      * on the first loop in which the button value is true the objects's value will toggle
      * subsequent loops will not change the value until the button value becomes false again
      *
-     * @param buttonValue weather the button is being pressed. Used to determine if the boolean object should be toggled
+     * @param buttonValue whether the button is being pressed. Used to determine if the boolean object should be toggled
      */
     void changeValueFromInput(bool buttonValue);
 
