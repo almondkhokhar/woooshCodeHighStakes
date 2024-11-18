@@ -39,3 +39,4 @@ bool toggleBoolObject::getValue()
 {
     return toggleValue;
 }
+

@@ -6,6 +6,8 @@ using namespace vex;
 void vexcodeInit(void);
 
 extern vex::pneumatics clamp;
+extern vex::pneumatics bonk;
+extern vex::pneumatics intakeLift;
 extern vex::brain Brain;
 extern vex::controller con;
 extern vex::motor left1;
@@ -19,13 +21,16 @@ extern vex::motor right3;
 extern vex::motor intake;
 // declares intake motor
 extern vex::motor lift;
+extern vex::motor lift2;
 //declares lift motor
 extern vex::motor_group leftdrive;
 extern vex::motor_group rightdrive;
 //declares drivetrain motor groups
 extern vex::inertial Inertial;
-extern vex::inertial Inert2;
+extern vex::limit lSwitch;
 //declares inertial sensors, we have 2 so if one disconnects or has an error we can override it's input and use the second inertial sensor instead
+extern vex::optical Optical;
+extern vex::rotation Rotation;
 extern vex::motor_group leftDrive_Group;
 extern vex::motor_group rightDrive_Group;
 extern drivetrainObj Drive;
