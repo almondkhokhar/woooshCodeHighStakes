@@ -60,7 +60,7 @@ void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double 
     {
         // calculate the total distance the encoder has traveled in degrees
         double encoderDistance = getDriveEncoderValue() - startPos;
-        printf("%f/n", encoderDistance);
+        printf("%f\n", getRightDriveEncoderValue());
         // converts the encoder distance to inches traveled
         double travelDistance = angularDistanceToLinearDistance(encoderDistance, wheelDiameter, gearRatio);
         // stores the current heading of the robot
