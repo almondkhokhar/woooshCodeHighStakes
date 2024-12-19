@@ -166,16 +166,20 @@ int colorReject(){
 }
 
 int ladyBrownMechScoring(){
-  double lbkP = 2.5;
+  double lbkP = 1.2;
+  double lbkD = .3;
+  double lbSpeed;
+
   if (lbState == 0){
-    while(Rotation.position(deg)- 3 > 20){
+    while(Rotation.position(deg)- .2 > 17){
+      lbSpeed = lbkP * (17-Rotation.position(deg))  - lbkD * lbSpeed;
       if (Rotation.position(deg)  > 350){
-        lift.spin(fwd, 100,pct);
-        lift2.spin(fwd, 100,pct);
+        lift.spin(fwd, lbSpeed,pct);
+        lift2.spin(fwd, lbSpeed,pct);
       }
-      else if (Rotation.position(deg) - 3 > 20){
-        lift.spin(fwd, -100,pct);
-        lift2.spin(fwd, -100,pct);
+      else if (Rotation.position(deg) - .2 > 17){
+        lift.spin(fwd, lbSpeed,pct);
+        lift2.spin(fwd, lbSpeed,pct);
       }
       else {
         lift.stop();
@@ -187,14 +191,15 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 1){
-    while(Rotation.position(deg)- .2 > 36.3 or Rotation.position(deg) + .2 < 36.3 ){
-      if (Rotation.position(deg) + .2 < 36.3){
-        lift.spin(fwd, lbkP * (36-Rotation.position(deg)),pct);
-        lift2.spin(fwd, lbkP * (36-Rotation.position(deg)) ,pct);
+    while(Rotation.position(deg)- .2 > 41.3 or Rotation.position(deg) + .2 < 41.3 ){
+      lbSpeed = lbkP * (41.3-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < 41.3){
+        lift.spin(fwd, lbSpeed,pct);
+        lift2.spin(fwd, lbSpeed,pct);
       }
-      else if (Rotation.position(deg) - .2 > 36.3){
-        lift.spin(fwd, lbkP * (36-Rotation.position(deg)),pct);
-        lift2.spin(fwd, lbkP * (36-Rotation.position(deg)),pct);
+      else if (Rotation.position(deg) - .2 > 41.3){
+        lift.spin(fwd, lbSpeed,pct);
+        lift2.spin(fwd, lbSpeed,pct);
       }
       else {
         lift.stop(hold);
@@ -225,14 +230,15 @@ int ladyBrownMechScoring(){
   //   return(0);
   // }
     if (lbState == 2){
-    while(Rotation.position(deg) - 3 > 152.5 or Rotation.position(deg) + 3 < 152.5){
-      if (Rotation.position(deg) + 3 < 152.5){
-        lift.spin(fwd,  lbkP * (152.5-Rotation.position(deg)),pct);
-        lift2.spin(fwd,  lbkP * (152.5-Rotation.position(deg)),pct);
+    while(Rotation.position(deg) - .2 > 149.5 or Rotation.position(deg) + .2 < 149.5){
+      lbSpeed = lbkP * (149.5-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < 149.5){
+        lift.spin(fwd, lbSpeed ,pct);
+        lift2.spin(fwd,  lbSpeed,pct);
       }
-      else if (Rotation.position(deg) - 3 > 152.5){
-        lift.spin(fwd, lbkP * (152.5-Rotation.position(deg)),pct);
-        lift2.spin(fwd, lbkP * (152.5-Rotation.position(deg)),pct);
+      else if (Rotation.position(deg) - .2 > 149.5){
+        lift.spin(fwd, lbSpeed,pct);
+        lift2.spin(fwd, lbSpeed,pct);
       }
       else {
         lift.stop(hold);
@@ -244,14 +250,15 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 3){
-    while(Rotation.position(deg) - 3 > 70 or Rotation.position(deg) + 3 < 70){
-      if (Rotation.position(deg) + 3 < 70){
-        lift.spin(fwd,  lbkP * (70-Rotation.position(deg)),pct);
-        lift2.spin(fwd,  lbkP * (70-Rotation.position(deg)),pct);
+    while(Rotation.position(deg) - .2 > 70 or Rotation.position(deg) + .2 < 70){
+      lbSpeed = lbkP * (70-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < 70){
+        lift.spin(fwd,  lbSpeed,pct);
+        lift2.spin(fwd,  lbSpeed,pct);
       }
-      else if (Rotation.position(deg) - 3 > 70 ){
-        lift.spin(fwd,  lbkP * (70-Rotation.position(deg)),pct);
-        lift2.spin(fwd,  lbkP * (70-Rotation.position(deg)),pct);
+      else if (Rotation.position(deg) - .2 > 70 ){
+        lift.spin(fwd,  lbSpeed,pct);
+        lift2.spin(fwd,  lbSpeed,pct);
       }
       else {
         lift.stop(hold);
@@ -263,14 +270,15 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 4){
-    while(Rotation.position(deg) - 1 > 164 or Rotation.position(deg) + 1 < 164){
-      if (Rotation.position(deg) + 1 < 164){
-        lift.spin(fwd,  lbkP * (164-Rotation.position(deg)),pct);
-        lift2.spin(fwd,  lbkP * (164-Rotation.position(deg)),pct);
+    while(Rotation.position(deg) - .2 > 166 or Rotation.position(deg) + .2 < 166){
+      lbSpeed = lbkP * (166-Rotation.position(deg)) - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < 166){
+        lift.spin(fwd, lbSpeed ,pct);
+        lift2.spin(fwd,  lbSpeed,pct);
       }
-      else if (Rotation.position(deg) - 1 > 164){
-        lift.spin(fwd,  lbkP * (164-Rotation.position(deg)),pct);
-        lift2.spin(fwd,  lbkP * (164-Rotation.position(deg)),pct);
+      else if (Rotation.position(deg) - .2 > 166){
+        lift.spin(fwd,  lbSpeed,pct);
+        lift2.spin(fwd,  lbSpeed,pct);
       }
       else {
         lift.stop(hold);
@@ -1469,7 +1477,7 @@ void pasteRedPos(){
 
 void pasteBluePos(){
   task c1 = task(clampOne);
-  Drive.swing(-45.7, 100, 35, 1.15);
+  Drive.swing(-45.7, 100, 35, 1.05);
   Drive.moveDistance(7, 100, .5);
   Drive.turn(132, 100, .7);
   Drive.moveDistance(8.3, 40, .6);
@@ -1508,8 +1516,20 @@ void pasteBluePos(){
   Drive.turn(60, 100, .8);
   bonk.close();
 }
+int bonky(){
+  wait(.8, sec);
+  bonk.open();
+  return(0);
+}
+void dataCollection(){
+  task bonkers = task(bonky);
+  Drive.swing(38, 100, -6, .89);
+  Drive.moveDistance(-10, 100, .7);
+
+}
 void (*autonsList[])() =
 {
+  dataCollection,
   pasteBluePos,
   pasteRedPos,
   redSoloAWP, 
