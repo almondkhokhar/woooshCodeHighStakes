@@ -41,10 +41,54 @@ void drivetrainObj::setBrakeType(vex::brakeType brakeType)
     rightDrive_Group.setStopping(brakeType);
 }
 
-void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double timeout, bool correctHeading)
+void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double timeout, double correctHeading)
 {
     // initalize objects for PID control
-    MiniPID distanceControl(1000, 2, 700);
+    MiniPID distanceControl(1100, 0,1000);
+    MiniPID headingControl(550, 1, 1000);
+    // configure pid controls
+    distanceControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+    headingControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+
+    // track inital values to use for calculating total change
+    double startPos = getDriveEncoderValue();
+    double startAngle = correctHeading;
+    double startTime = vex::timer::system();
+
+    // condition exits loops after some amount of time has passed
+    while (vex::timer::system() - startTime <= timeout * 1000)
+    {
+        // calculate the total distance the encoder has traveled in degrees
+        double encoderDistance = getDriveEncoderValue() - startPos;
+
+        // converts the encoder distance to inches traveled
+        double travelDistance = angularDistanceToLinearDistance(encoderDistance, wheelDiameter, gearRatio);
+        // stores the current heading of the robot
+        double actualAngle = correctHeading;
+        // gets ouptput from pid controller for travel speed
+        double output = distanceControl.getOutput(travelDistance, targetDistance);
+        // gets output from pid controller for turning speed
+        double correctionFactor = headingControl.getOutput(actualAngle, startAngle);
+
+        if (true)
+        {
+            runLeftSide(output + correctionFactor);
+            runRightSide(output - correctionFactor);
+        }
+        else
+        {
+            runLeftSide(output);
+            runRightSide(output);
+        }
+        wait(20, msec);
+    }
+    stopLeftSide(vex::brakeType::coast);
+    stopRightSide(vex::brakeType::coast);
+}
+void drivetrainObj::moveDistanceTimeout(double targetDistance, double maxSpeed, double timeout, bool correctHeading)
+{
+    // initalize objects for PID control
+    MiniPID distanceControl(1100, 0,1000);
     MiniPID headingControl(550, 1, 1000);
     // configure pid controls
     distanceControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
@@ -54,13 +98,15 @@ void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double 
     double startPos = getDriveEncoderValue();
     double startAngle = Inertial.rotation(deg);
     double startTime = vex::timer::system();
-
+    double prevVal = 0;
+    double counter= 0;
     // condition exits loops after some amount of time has passed
     while (vex::timer::system() - startTime <= timeout * 1000)
     {
         // calculate the total distance the encoder has traveled in degrees
         double encoderDistance = getDriveEncoderValue() - startPos;
-        printf("%f\n", getRightDriveEncoderValue());
+        
+
         // converts the encoder distance to inches traveled
         double travelDistance = angularDistanceToLinearDistance(encoderDistance, wheelDiameter, gearRatio);
         // stores the current heading of the robot
@@ -80,6 +126,16 @@ void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double 
             runLeftSide(output);
             runRightSide(output);
         }
+        
+        if (encoderDistance -.05 > prevVal){
+            counter +=1;
+
+        }
+
+        if (counter > 20){
+            break;
+        }
+        
         wait(20, msec);
     }
     stopLeftSide(vex::brakeType::coast);
@@ -136,7 +192,7 @@ void drivetrainObj::swing(double targetDistance, double maxSpeed, double targetA
 void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
 {
     // initalize object for PID control
-    MiniPID angleControl(350, 20, 3000);
+    MiniPID angleControl(400, 2, 3000);
     // configure PID controller
     angleControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
     angleControl.setMaxIOutput(0);
@@ -161,6 +217,7 @@ void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
         runLeftSide(output);
         runRightSide(-output);
         wait(10, msec);
+        
     }
     stopLeftSide(vex::brakeType::coast);
     stopRightSide(vex::brakeType::coast);
@@ -172,12 +229,12 @@ void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
 
 double drivetrainObj::getLeftDriveEncoderValue()
 {
-    return leftDrive_Group.position(deg);
+    return (left1.position(deg)+left2.position(deg))/2;
 }
 
 double drivetrainObj::getRightDriveEncoderValue()
 {
-    return rightDrive_Group.position(deg);
+    return (right2.position(deg)+right2.position(deg))/2;
 }
 
 double drivetrainObj::getDriveEncoderValue()

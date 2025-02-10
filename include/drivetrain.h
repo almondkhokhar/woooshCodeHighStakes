@@ -60,7 +60,8 @@ class drivetrainObj
          * @param correctHeading Indicates whether to correct the heading during movement.
          */
         void moveDistance(double targetDistance, double maxSpeed, double timeout);
-        void moveDistance(double targetDistance, double maxSpeed, double timeout, bool correctHeading);
+        void moveDistance(double targetDistance, double maxSpeed, double timeout, double correctHeading);
+        void moveDistanceTimeout(double targetDistance, double maxSpeed, double timeout, bool correctHeading);
 
         /**
          * @brief move the robot a specified distance and angle
