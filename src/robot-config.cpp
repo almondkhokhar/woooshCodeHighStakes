@@ -9,20 +9,21 @@ motor right2 = motor(PORT6, ratio6_1, false);//middle
 motor right3 = motor(PORT7, ratio6_1, false);//back
 //declares ports, cartidges, and directions for right drive motors
 motor left1 = motor(PORT15, ratio6_1, true);//front
-motor left2 = motor(PORT20,  ratio6_1, true);//middle
+motor left2 = motor(PORT20,  ratio6_1, true);//middle 
 motor left3 = motor(PORT19,  ratio6_1, true);//back
 //declares ports, cartidges, and directions for left drive motors
-motor lift = motor(PORT3, true);
-motor lift2 = motor(PORT4, false);
+motor lift = motor(PORT9, false);
+motor lift2 = motor(PORT11, true);
 //declares port and direction for lift motor
 motor intake = motor(PORT8, false);//
 //declares port and direction for intake
 motor_group leftdrive(left1, left2, left3);
 motor_group rightdrive(right1, right2, right3);
 //declares the motors in each motor group
-inertial Inertial = inertial(PORT11);
+inertial Inertial = inertial(PORT17);
 //declares the inertial sensors' ports
 optical Optical = optical(PORT12);
+optical TheOpps = optical(PORT21);
 rotation Rotation = rotation(PORT2);
 vex::motor_group leftDrive_Group = motor_group(left1, left2, left3);
 vex::motor_group rightDrive_Group = motor_group(right1, right2, right3);

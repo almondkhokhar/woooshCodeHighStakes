@@ -81,6 +81,7 @@ void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double 
             runRightSide(output);
         }
         wait(20, msec);
+        
     }
     stopLeftSide(vex::brakeType::coast);
     stopRightSide(vex::brakeType::coast);
@@ -217,6 +218,7 @@ void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
         runLeftSide(output);
         runRightSide(-output);
         wait(10, msec);
+        printf("\n%f", Inertial.rotation(deg));
         
     }
     stopLeftSide(vex::brakeType::coast);

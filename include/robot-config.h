@@ -30,6 +30,7 @@ extern vex::inertial Inertial;
 extern vex::limit lSwitch;
 //declares inertial sensors, we have 2 so if one disconnects or has an error we can override it's input and use the second inertial sensor instead
 extern vex::optical Optical;
+extern vex::optical TheOpps;
 extern vex::rotation Rotation;
 extern vex::motor_group leftDrive_Group;
 extern vex::motor_group rightDrive_Group;
