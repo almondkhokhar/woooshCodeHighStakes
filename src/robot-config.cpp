@@ -12,7 +12,7 @@ motor left1 = motor(PORT17, ratio6_1, false);//front
 motor left2 = motor(PORT16,  ratio6_1, true);//middle 
 motor left3 = motor(PORT15,  ratio6_1, true);//back
 //declares ports, cartidges, and directions for left drive motors
-motor lb = motor(PORT14, false);
+motor lb = motor(PORT21, false);
 motor upperIntake = motor(PORT6, true);
 //declares port and direction for lift motor
 motor lowerIntake = motor(PORT10, false);//
