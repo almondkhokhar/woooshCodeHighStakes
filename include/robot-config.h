@@ -18,13 +18,14 @@ extern vex::motor right1;
 extern vex::motor right2;
 extern vex::motor right3;
 //declares right drive motors
-extern vex::motor intake;
 // declares intake motor
-extern vex::motor lift;
-extern vex::motor lift2;
+extern vex::motor lb;
+extern vex::motor lowerIntake;
+extern vex::motor upperIntake;
 //declares lift motor
 extern vex::motor_group leftdrive;
 extern vex::motor_group rightdrive;
+extern vex::motor_group intake;
 //declares drivetrain motor groups
 extern vex::inertial Inertial;
 extern vex::limit lSwitch;
@@ -32,6 +33,7 @@ extern vex::limit lSwitch;
 extern vex::optical Optical;
 extern vex::optical TheOpps;
 extern vex::rotation Rotation;
+extern vex::motor_group intake_Group;
 extern vex::motor_group leftDrive_Group;
 extern vex::motor_group rightDrive_Group;
 extern drivetrainObj Drive;
