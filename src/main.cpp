@@ -1339,12 +1339,12 @@ void simpleNegBlue(){
 }
 //Done
 void simpleNegRed(){
-  task intCont = task(slowIntSN);
+  task intCont = task(intContAWP);
   Drive.moveDistance( 27 , 60 , 1.2);	
   intake.stop();
   Drive.turn( -90 , 100 , .65 );	
   task C1 = task(SNClamp);
-  Drive.moveDistance( -21.15492957724733 , 40 , 1 );	
+  Drive.moveDistance( -22 , 40 , 1 );	
   Drive.turn(45, 100, .9);
   intake.spin(fwd, 100, pct);
   wait(3, sec);
@@ -1513,7 +1513,7 @@ int fasterClamping(){
 }
 
 int intContAWPSkills(){
-  wait(.3, sec);
+  wait(.15, sec);
   while (!Optical.isNearObject()){
     intake.spin(fwd, 40, pct);
   }
@@ -1563,12 +1563,12 @@ void simHitSkills(){
   Drive.moveDistance(50, 80, 1.6);
   intake.spin(fwd,100,pct);
   Drive.moveDistance(-14.5, 100, .7);
-  Drive.turn(180, 70, .8);
+  Drive.turn(180, 100, .8);
   task removeHook = task(hookRemove);
   wait(.2, sec);
   task waitIntake = task(intakeWait);
 
-  Drive.moveDistance(8.3, 100, .7);
+  Drive.moveDistance(8.4, 100, .7);
   Drive.turn(90, 100, .7);
   intake.spin(fwd, 100, pct);
   task intCont1 = task(intContAWP);
@@ -1576,11 +1576,11 @@ void simHitSkills(){
   lbState = 4;
   task ringScore1 = task(ladyBrownMechScoring);
   Drive.turn(90, 30, .15);
-  Drive.moveDistance(6.5, 100, .55);
+  Drive.moveDistance(6.8, 100, .55);
   Drive.turn(90, 100, .3);
   lbState = 0;
   task saveTheLady = task(ladyBrownMechScoring);
-  Drive.moveDistance(-14.5, 100, 1);
+  Drive.moveDistance(-15.2, 100, 1);
   Drive.turn(180, 100, .8);
   intake.spin(fwd, 100, pct);
   Drive.moveDistance(33, 70, 1.1);
@@ -1624,13 +1624,11 @@ void simHitSkills(){
   task intCont4 = task(intContAWP);
   Drive.turn(-180, 100, .95);
   intake.spin(fwd, 100, pct);
-  Drive.moveDistance(14, 70, 1);
+  Drive.moveDistance(16, 70, 1);
   task upDown3 = task(upydown);
   Drive.moveDistance(6, 40, .5);
   intake.spin(fwd,100, pct);
-  intakeLift.open();
-  task upDown2 = task(upydown);
-  Drive.moveDistance(29, 30, 1.5);
+  Drive.moveDistance(27, 30, 1.35);
   Drive.moveDistance(-4, 100, .4);
   intake.spin(fwd, 100, pct);
   Drive.turn(-50, 100, .7);
@@ -1639,14 +1637,14 @@ void simHitSkills(){
   Drive.moveDistance(-15, 100, .7);
   clamp.close();
   intake.spin(fwd, -100, pct);
-  Drive.turn(4, 100, .25);
+  Drive.turn(5.5, 100, .3);
   intake.spin(fwd, 100, pct);
   // //28.4 seconds on 11/16/24 // 34.75 on 11/17/24
   lbState = 1;
   task ladyLift = task(ladyBrownMechScoring);
   intake.spin(fwd, 40, pct);
   Drive.moveDistance(61, 70, 1.7);
-  Drive.moveDistance(-7.4, 100, .7);
+  Drive.moveDistance(-7.45, 100, .7);
   task removeHook2 = task(hookRemove2);
   Drive.turn(-90, 100, .7);
   intake.stop();
@@ -1695,7 +1693,7 @@ void simHitSkills(){
   intake.spin(fwd, 100, pct);
   Drive.swing(20, 100, 275, .7);
   Drive.swing(37, 100, 320, .85);
-  Drive.swing(23, 100, 280, .73);
+  Drive.swing(23, 100, 285, .73);
   Drive.moveDistance(1000, 100, 2);
   
  
@@ -2002,16 +2000,17 @@ void newPalElims(){
 }
 void (*autonsList[])() =
 {
-  bluePosElim, // Done up to Alliance NEEDS TUNING
-  redPosElim,
-  redNegElim,// TEST BEFORE RUN 
+  simpleNegRed,//DONE
+  redNegElim,// Needs Tuning Est: 30 minutes + Color sort 
+  soloSig, // Needs redesigned route Est 2 hours 
+  bluePosElim, // Done 
+  redPosElim, // Done
+  simHitSkills, // Done
   blueNegElim,//DONE STRAIGHT AT RING
   fractalRightStart,
-  simplePosBlue,//DONE Center flex wheel center of inside tile
-  simplePosRed, //DONE Center flex wheel center of inside tile
+  simplePosBlue,//DONE Preload at bottom of intake on a hook
+  simplePosRed, //DONE Preload at bottom of intake on a hook
   newPalElims,
-  simHitSkills,
-  soloSig, // DONE 4.25 in from right side field tile locking to first drive screw
   fractalLeftStart,
   ringRushRed, 
   secondHalfSkills,
@@ -2022,7 +2021,6 @@ void (*autonsList[])() =
   ringRushBlue,
   blueClampRush,
   redNegElimKALA, //DONE READY Straight at ring
-  simpleNegRed,//DONE STRAIGHT AT RING
   mogoRushBlue,
   
   
