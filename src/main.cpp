@@ -129,13 +129,13 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 1){
-    while(Rotation.position(deg)- .2 > 114 or Rotation.position(deg) + .2 < 114){
-      lbSpeed = lbkP * (114-Rotation.position(deg))  - lbkD * lbSpeed;
-      if (Rotation.position(deg) + .2 < 114){
+    while(Rotation.position(deg)- .2 > 112 or Rotation.position(deg) + .2 < 112){
+      lbSpeed = lbkP * (112-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < 112){
         lb.spin(fwd, lbSpeed,pct);
         
       }
-      else if (Rotation.position(deg) - .2 > 114){
+      else if (Rotation.position(deg) - .2 > 112){
         lb.spin(fwd, lbSpeed,pct);
        
       }
