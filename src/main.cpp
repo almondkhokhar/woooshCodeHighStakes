@@ -60,6 +60,8 @@ bool reject = false;
 bool shouldReject = true;
 bool rejectStart = false;
 bool holdRing = false;
+bool intakeRev = false;
+bool antiJammy = false;
 int counter = 0;
 int lbState = 0;
 
@@ -84,7 +86,19 @@ competition Competition;
 /*  function is only called once after the V5 has been powered on and        */
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
-
+int antiJam(){
+  while (true){
+    if (intake.current(pct) > 90  && !intakeRev && !(lbState== 1)){
+      antiJammy = true;
+      intake.spin(fwd, -100, pct);
+      wait(.15, sec);
+    } 
+    else{
+      antiJammy = false;
+      wait(.2, sec);
+    }
+  }
+}
 int ladyBrownMechScoring(){
   double lbkP = 1.2;
   double lbkD = .3;
@@ -259,19 +273,7 @@ int colorReject(){
   }
   return(0);
 }
-int antiJam(){
-  while (!(lbState == 1)){
-    if (intake.current() > 20 && intake.velocity(pct) < 1){
-      reject = true;
-      intake.spin(fwd, -100, pct);
-      wait(.2, sec);
-      intake.stop();
-      reject = false;
-    }
 
-  }
-  return(0);
-}
 
 
 void pre_auton(void) {
@@ -2093,6 +2095,8 @@ void usercontrol()
   // isRed = true;
   // task cReject = task(colorReject);
   task printcon = task(conInfo);
+  wait(.01, sec);
+  task noJamPorFavor = task(antiJam);
   while (true)
   {
     // if (!(lbState == 1) && f13loop){
