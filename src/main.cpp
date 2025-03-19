@@ -129,13 +129,13 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 1){
-    while(Rotation.position(deg)- .2 > 113 or Rotation.position(deg) + .2 < 113){
-      lbSpeed = lbkP * (113-Rotation.position(deg))  - lbkD * lbSpeed;
-      if (Rotation.position(deg) + .2 < 113){
+    while(Rotation.position(deg)- .2 > 114.5 or Rotation.position(deg) + .2 < 114.5){
+      lbSpeed = lbkP * (114.5-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < 114.5){
         lb.spin(fwd, lbSpeed,pct);
         
       }
-      else if (Rotation.position(deg) - .2 > 113){
+      else if (Rotation.position(deg) - .2 > 114.5){
         lb.spin(fwd, lbSpeed,pct);
        
       }
@@ -2017,6 +2017,7 @@ void newPalElims(){
 
 void (*autonsList[])() =
 {
+  simplePosRed, //DONE Preload at bottom of intake_Group on a hook
   simHitSkills, // Done
   simpleNegRed,//DONE
   simpleNegBlue,//DONE 
@@ -2027,7 +2028,6 @@ void (*autonsList[])() =
   blueNegElim,//DONE STRAIGHT AT RING
   fractalRightStart,
   simplePosBlue,//DONE Preload at bottom of intake_Group on a hook
-  simplePosRed, //DONE Preload at bottom of intake_Group on a hook
   newPalElims,
   fractalLeftStart,
   ringRushRed, 
@@ -2227,7 +2227,7 @@ void usercontrol()
       f6loop = false;
     }
 
-    if (con.ButtonB.pressing()){
+    if (con.ButtonDown.pressing()){
       if (f14loop){
         ringRush.open();
       }
@@ -2243,7 +2243,7 @@ void usercontrol()
 
 
     //intakelift
-    if (con.ButtonDown.pressing()){
+    if (con.ButtonB.pressing()){
       if (f7loop){
         intakeLift.open();
       }
