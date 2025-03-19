@@ -2011,6 +2011,7 @@ void newPalElims(){
 void (*autonsList[])() =
 {
   bluePosElim, // Done 
+  simplePosBlue,//DONE Preload at bottom of intake on a hook
   simpleNegRed,//DONE
   simpleNegBlue,//DONE STRAIGHT AT RING
   redNegElim,// Needs Tuning Est: 30 minutes + Color sort 
@@ -2019,7 +2020,6 @@ void (*autonsList[])() =
   simHitSkills, // Done
   blueNegElim,//DONE STRAIGHT AT RING
   fractalRightStart,
-  simplePosBlue,//DONE Preload at bottom of intake on a hook
   simplePosRed, //DONE Preload at bottom of intake on a hook
   newPalElims,
   fractalLeftStart,
