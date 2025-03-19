@@ -33,6 +33,7 @@ drivetrainObj Drive (3.25, .75);
 pneumatics clamp = pneumatics(Brain.ThreeWirePort.F);
 pneumatics bonk = pneumatics(Brain.ThreeWirePort.H);
 pneumatics intakeLift = pneumatics(Brain.ThreeWirePort.G);
+pneumatics ringRush = pneumatics(Brain.ThreeWirePort.E);
 /**
 * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
 *

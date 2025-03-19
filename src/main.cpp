@@ -55,6 +55,8 @@ bool f10loop = true;
 bool f11loop = false;
 bool f12loop = true;
 bool f13loop = true;
+bool f14loop = true;
+bool f15loop = true;
 bool isRed = true;
 bool reject = false;
 bool shouldReject = true;
@@ -2211,7 +2213,7 @@ void usercontrol()
     }
 
     //bonk
-    if (con.ButtonB.pressing()){
+    if (con.ButtonA.pressing()){
       if (f5loop){
         bonk.open();
       }
@@ -2225,13 +2227,21 @@ void usercontrol()
       f6loop = false;
     }
 
-
-    if (con.ButtonA.pressing()){
-      if (con.Axis2.value() < -50 && con.Axis2.value() < -50 ){
-        rightdrive.spin(fwd, -60, pct);
-        leftdrive.spin(fwd, -60, pct);
+    if (con.ButtonB.pressing()){
+      if (f14loop){
+        ringRush.open();
       }
+      if (!f14loop){
+        ringRush.close();
+      }
+      f15loop = true;
     }
+    else if (f15loop){
+      f14loop = !f14loop;
+      f15loop = false;
+    }
+
+
     //intakelift
     if (con.ButtonDown.pressing()){
       if (f7loop){

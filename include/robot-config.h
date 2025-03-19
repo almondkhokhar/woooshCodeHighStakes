@@ -8,6 +8,7 @@ void vexcodeInit(void);
 extern vex::pneumatics clamp;
 extern vex::pneumatics bonk;
 extern vex::pneumatics intakeLift;
+extern vex::pneumatics ringRush;
 extern vex::brain Brain;
 extern vex::controller con;
 extern vex::motor left1;
