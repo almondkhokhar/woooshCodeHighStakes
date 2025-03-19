@@ -90,7 +90,7 @@ competition Competition;
 /*---------------------------------------------------------------------------*/
 int antiJam(){
   while (true){
-    if (upperIntake.current(pct) > 90  && !intakeRev && !(lbState== 1)){
+    if (upperIntake.current(pct) > 93  && !intakeRev && !(lbState== 1)){
       antiJammy = true;
       upperIntake.spin(fwd, -100, pct);
       wait(.15, sec);
