@@ -32,6 +32,7 @@ extern vex::limit lSwitch;
 extern vex::optical Optical;
 extern vex::optical TheOpps;
 extern vex::rotation Rotation;
+extern vex::pot autoselect;
 extern vex::motor_group leftDrive_Group;
 extern vex::motor_group rightDrive_Group;
 extern drivetrainObj Drive;

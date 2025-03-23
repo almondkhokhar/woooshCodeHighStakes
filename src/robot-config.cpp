@@ -32,6 +32,7 @@ drivetrainObj Drive (3.25, .75);
 pneumatics clamp = pneumatics(Brain.ThreeWirePort.F);
 pneumatics bonk = pneumatics(Brain.ThreeWirePort.H);
 pneumatics intakeLift = pneumatics(Brain.ThreeWirePort.G);
+pot autoselect = pot(Brain.ThreeWirePort.B);
 /**
 * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
 *

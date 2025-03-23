@@ -44,8 +44,8 @@ void drivetrainObj::setBrakeType(vex::brakeType brakeType)
 void drivetrainObj::moveDistance(double targetDistance, double maxSpeed, double timeout, double correctHeading)
 {
     // initalize objects for PID control
-    MiniPID distanceControl(1100, 0,1000);
-    MiniPID headingControl(550, 1, 1000);
+    MiniPID distanceControl(1100, 2,1000);
+    MiniPID headingControl(750, 1, 1000);
     // configure pid controls
     distanceControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
     headingControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
