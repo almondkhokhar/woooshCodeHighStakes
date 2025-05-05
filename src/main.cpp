@@ -57,6 +57,8 @@ bool f12loop = true;
 bool f13loop = true;
 bool f14loop = true;
 bool f15loop = true;
+bool f16loop = true;
+bool f17loop = false;
 bool isRed = true;
 bool reject = false;
 bool shouldReject = true;
@@ -64,6 +66,7 @@ bool rejectStart = false;
 bool holdRing = false;
 bool intakeRev = false;
 bool antiJammy = false;
+bool lbup = false;
 int counter = 0;
 int lbState = 0;
 
@@ -89,17 +92,43 @@ competition Competition;
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 int antiJam(){
+  // int jamCount;
+  // while (true){
+  //   if (upperIntake.current(pct) > 99  && !intakeRev && !(lbState== 1)){
+  //     jamCount +=1;
+  //     if (jamCount > 70){
+  //       antiJammy = true;
+  //       upperIntake.spin(fwd, -100, pct);
+  //       wait(.15, sec);
+  //     }
+  //   } 
+  //   else{
+  //     antiJammy = false;
+  //     jamCount = 0;
+  //     wait(.2, sec);
+  //   }
+  //   wait(20, msec);
+  // }
+  return 1;
+}
+int autoJam(){
+  int jamCount;
   while (true){
-    if (upperIntake.current(pct) > 93  && !intakeRev && !(lbState== 1)){
-      antiJammy = true;
-      upperIntake.spin(fwd, -100, pct);
-      wait(.15, sec);
+    if (upperIntake.current(pct) > 90){
+      jamCount +=1;
+      if (jamCount > 60){
+        upperIntake.spin(fwd, -100, pct);
+        wait(.15, sec);
+        upperIntake.spin(fwd, 100, pct);
+      }
     } 
     else{
-      antiJammy = false;
+      jamCount = 0;
       wait(.2, sec);
     }
+    wait(20, msec);
   }
+return 1;
 }
 int lbIntake(){
   intake_Group.spin(fwd, -50, pct);
@@ -108,14 +137,22 @@ int lbIntake(){
   return(0);
 }
 int ladyBrownMechScoring(){
-  double lbkP = 1.2;
-  double lbkD = .3;
+  double lbkP = 1.3;
+  double lbkP0 = 1.7;
+  double lbkP2 = 3;
+  double lbkD = .45;
   double lbSpeed = 0;
-  task intContLB = task (lbIntake);
+  double lbState0 = 96;
+  double lbState1 = 120;
+  double lbState2 = 249.5;
+  double lbState3 = 150;
+  double lbState4 = 333;
+  double lbState5 = 290;
+  double lbState7 = 240;
   if (lbState == 0){
-    while(Rotation.position(deg)- .2 > 101){
-      lbSpeed = lbkP * (101-Rotation.position(deg))  - lbkD * lbSpeed;
-      if (Rotation.position(deg) - .2 > 101){
+    while(Rotation.position(deg)- .2 > lbState0){
+      lbSpeed = lbkP0 * (lbState0-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) - .2 > lbState0){
         lb.spin(fwd, lbSpeed,pct);
       
       }
@@ -129,13 +166,13 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 1){
-    while(Rotation.position(deg)- .2 > 112 or Rotation.position(deg) + .2 < 112){
-      lbSpeed = lbkP * (112-Rotation.position(deg))  - lbkD * lbSpeed;
-      if (Rotation.position(deg) + .2 < 112){
+    while(Rotation.position(deg)- .1 > lbState1 or Rotation.position(deg) + .1 < lbState1){
+      lbSpeed = lbkP * (lbState1-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .1 < lbState1){
         lb.spin(fwd, lbSpeed,pct);
         
       }
-      else if (Rotation.position(deg) - .2 > 112){
+      else if (Rotation.position(deg) - .1 > lbState1){
         lb.spin(fwd, lbSpeed,pct);
        
       }
@@ -149,13 +186,13 @@ int ladyBrownMechScoring(){
     return(0);
   }
     if (lbState == 2){
-    while(Rotation.position(deg) - .2 > 249.5 or Rotation.position(deg) + .2 < 249.5){
-      lbSpeed = lbkP * (249.5-Rotation.position(deg))  - lbkD * lbSpeed;
-      if (Rotation.position(deg) + .2 < 249.5){
+    while(Rotation.position(deg) - .2 > lbState2 or Rotation.position(deg) + .2 < lbState2){
+      lbSpeed = 1.7*lbkP2 * (lbState2-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < lbState2){
         lb.spin(fwd, lbSpeed ,pct);
         
       }
-      else if (Rotation.position(deg) - .2 > 249.5){
+      else if (Rotation.position(deg) - .2 > lbState2){
         lb.spin(fwd, lbSpeed,pct);
       
       }
@@ -169,13 +206,13 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 3){
-    while(Rotation.position(deg) - .2 > 150 or Rotation.position(deg) + .2 < 150){
-      lbSpeed = lbkP * (150-Rotation.position(deg))  - lbkD * lbSpeed;
-      if (Rotation.position(deg) + .2 < 150){
+    while(Rotation.position(deg) - .2 > lbState3 or Rotation.position(deg) + .2 < lbState3){
+      lbSpeed = lbkP * (lbState3-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < lbState3){
         lb.spin(fwd,  lbSpeed,pct);
        
       }
-      else if (Rotation.position(deg) - .2 > 150 ){
+      else if (Rotation.position(deg) - .2 > lbState3 ){
         lb.spin(fwd,  lbSpeed,pct);
       
       }
@@ -189,13 +226,13 @@ int ladyBrownMechScoring(){
     return(0);
   }
   if (lbState == 4){
-    while(Rotation.position(deg) - .2 > 329 or Rotation.position(deg) + .2 < 329){
-      lbSpeed = lbkP * (329-Rotation.position(deg)) - lbkD * lbSpeed;
-      if (Rotation.position(deg) + .2 < 329){
+    while(Rotation.position(deg) - .2 > lbState4 or Rotation.position(deg) + .2 < lbState4){
+      lbSpeed = lbkP * (lbState4-Rotation.position(deg)) - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < lbState4){
         lb.spin(fwd, lbSpeed ,pct);
        
       }
-      else if (Rotation.position(deg) - .2 > 329){
+      else if (Rotation.position(deg) - .2 > lbState4){
         lb.spin(fwd,  lbSpeed,pct);
         
       }
@@ -208,12 +245,71 @@ int ladyBrownMechScoring(){
  
     return(0);
   }
+  if (lbState == 5){
+    while(Rotation.position(deg) - .2 > lbState5 or Rotation.position(deg) + .2 < lbState5){
+      lbSpeed = lbkP * (lbState5-Rotation.position(deg)) - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < lbState5){
+        lb.spin(fwd, lbSpeed ,pct);
+       
+      }
+      else if (Rotation.position(deg) - .2 > lbState5){
+        lb.spin(fwd,  lbSpeed,pct);
+      }
+      else {
+        lb.stop(hold);
+       
+      }
+    }
+    lb.stop(hold);
+ 
+    return(0);
+  }
+  if (lbState == 6){
+    while(Rotation.position(deg) - .2 > lbState2 or Rotation.position(deg) + .2 < lbState2){
+      lbSpeed = lbkP * (lbState2-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < lbState2){
+        lb.spin(fwd, lbSpeed ,pct);
+        
+      }
+      else if (Rotation.position(deg) - .2 > lbState2){
+        lb.spin(fwd, lbSpeed,pct);
+      
+      }
+      else {
+        lb.stop(hold);
+        
+      }
+    }
+    lb.stop(hold);
+    
+    return(0);
+  }
+  if (lbState == 7){
+    while(Rotation.position(deg) - .2 > lbState7 or Rotation.position(deg) + .2 < lbState7){
+      lbSpeed = lbkP * (lbState7-Rotation.position(deg))  - lbkD * lbSpeed;
+      if (Rotation.position(deg) + .2 < lbState7){
+        lb.spin(fwd, lbSpeed ,pct);
+        
+      }
+      else if (Rotation.position(deg) - .2 > lbState7){
+        lb.spin(fwd, lbSpeed,pct);
+      
+      }
+      else {
+        lb.stop(hold);
+        
+      }
+    }
+    lb.stop(hold);
+    
+    return(0);
+  }
   return (0);
 }
 int colorReject(){
   double rejectkP = 7;
   double rejectkD = 0;
-  double rejectAng = 47;
+  double rejectAng = -270;
   bool lbBack = false;
   while (shouldReject){
     
@@ -224,8 +320,7 @@ int colorReject(){
         task deflection = task(ladyBrownMechScoring);
       }
       reject = true;
-      double initPos = intake_Group.position(deg);
-      double target = rejectAng+initPos;
+      double target = rejectAng+fmod(upperIntake.position(deg),-815)/3;
       double rejSpeed;
       while (reject){
         double currPos = intake_Group.position(deg);
@@ -255,8 +350,7 @@ int colorReject(){
         task deflection = task(ladyBrownMechScoring);
       }
       reject = true;
-      double initPos = intake_Group.position(deg);
-      double target = rejectAng+initPos;
+      double target = -270+fmod(upperIntake.position(deg),-815)/3;
       double rejSpeed;
       while (reject){
         double currPos = intake_Group.position(deg);
@@ -446,7 +540,7 @@ int stopInt(){
 
 int dropIntLift(){
   wait(1.1, sec);
-  intakeLift.close();
+  rushArm.close();
   return(0);
 }
  void simpleAWPposBlue(){
@@ -470,7 +564,7 @@ int dropIntLift(){
 
   Drive.turn(-55, 80, 1);
   clamp.close();
-  // intakeLift.open();
+  // rushArm.open();
   // task intDelay = task(slowInt);
   // task dropInt = task(dropIntLift);
   // Drive.moveDistance(60, 80, 1.4);
@@ -784,7 +878,7 @@ int testClamp2(){
 
 int dropInt(){
   wait(.7, sec);
-  intakeLift.close();
+  rushArm.close();
   return(0);
 }
 
@@ -799,7 +893,7 @@ void simAuto(){
   Drive.moveDistance( -17.15492957724733 , 100 , .85 );	
   Drive.turn( 232.14743605677376 , 100 , .9 );
   intake_Group.spin(fwd, 100, pct);
-  intakeLift.open();
+  rushArm.open();
   task contInt = task(dropInt);	
   Drive.moveDistance( 33.492957746054316 , 100 , 1 );	
   clamp.close();
@@ -832,7 +926,7 @@ void simAuto2(){
   Drive.moveDistance( -17.15492957724733 , 100 , .85 );	
   Drive.turn( 232.14743605677376 , 100 , .9 );	
   intake_Group.spin(fwd, 100, pct);
-  intakeLift.open();
+  rushArm.open();
   task contInt = task(dropInt);
   Drive.moveDistance( 33.492957746054316 , 100 , 1 );	
   clamp.close();
@@ -919,11 +1013,11 @@ void blueNegElimBad(){
   Drive.turn(-90, 100, .8);
   clamp.close();
   task intCont2 = task(conIntake2RNE);
-  intakeLift.open();
+  rushArm.open();
   intake_Group.spin(fwd, 100, pct);
   task intCont3 = task(intContAWP);
   Drive.moveDistance(28, 100, .9);
-  intakeLift.close();
+  rushArm.close();
 
   Drive.turn(-60, 100, .4);
   
@@ -935,7 +1029,7 @@ void blueNegElimBad(){
 
 
   // Drive.moveDistance(63,100, 1.6);
-  // intakeLift.close();
+  // rushArm.close();
   // Drive.turn(-180, 100, .7);
   // intake_Group.spin(fwd, 100, pct);
   // Drive.swing(17, 100, -90, .9);
@@ -963,12 +1057,12 @@ void blueNegElim(){
   Drive.moveDistance(-10, 100, .7);
   lbState= 0;
   task down = task(ladyBrownMechScoring);
-  intakeLift.open();
+  rushArm.open();
   intake_Group.spin(fwd, 100, pct);
   task I1 = task(intContAWP);
   Drive.turn(75, 100, .4);
   Drive.moveDistance(6, 60, .55);
-  intakeLift.close();
+  rushArm.close();
   Drive.moveDistance(-2, 100, .25);
   Drive.moveDistance(3, 100, .3);
   Drive.turn(-9, 100, .85);
@@ -1008,7 +1102,7 @@ int delayIntRNE(){
   return(0);
 }
 bool intakeCont = true;
-int alwaysIntake(){
+int alwaysIntakeForRed(){
   while (intakeCont){
     intake_Group.spin(fwd, 100, pct);
     if (235 > Optical.hue() && Optical.hue() > 225){
@@ -1027,12 +1121,12 @@ void redNegElim(){
   Drive.moveDistance(-10, 100, .7);
   lbState= 0;
   task down = task(ladyBrownMechScoring);
-  intakeLift.open();
+  rushArm.open();
   intake_Group.spin(fwd, 100, pct);
   task I1 = task(intContAWP);
   Drive.turn(-77, 100, .4);
   Drive.moveDistance(8, 60, .65);
-  intakeLift.close();
+  rushArm.close();
   wait(.1, sec);
   Drive.moveDistance(-3.5, 70, .35);
   Drive.moveDistance(1.5, 100, .3);
@@ -1040,7 +1134,7 @@ void redNegElim(){
   task C1 = task(clamp1RNE);
   Drive.moveDistance(-37, 45, 1.2);
   Drive.turn(175, 100, 1.1);
-  task I3 = task (alwaysIntake);
+  task I3 = task (alwaysIntakeForRed);
   Drive.swing(11.3, 100, 134 , 1);
   Drive.moveDistance(15, 100, .85);
   Drive.turn(34, 100, 1);
@@ -1107,10 +1201,10 @@ void redNegElimOld(){
   task down = task(ladyBrownMechScoring);
   Drive.turn(85, 100, .8);
   clamp.close();
-  intakeLift.open();
+  rushArm.open();
   intake_Group.spin(fwd, 100, pct);
   Drive.moveDistance(9,60, .9);
-  intakeLift.close();
+  rushArm.close();
   intake_Group.spin(fwd, 100, pct);
   task intCont2 = task(conIntake3RNE);
   Drive.turn(45, 100, .55);
@@ -1155,11 +1249,11 @@ void redNegElimKALA(){
   Drive.turn(90, 100, .8);
   clamp.close();
   task intCont2 = task(conIntake2RNE);
-  intakeLift.open();
+  rushArm.open();
   intake_Group.spin(fwd, 100, pct);
   task intCont3 = task(intContAWP);
   Drive.moveDistance(28, 100, .9);
-  intakeLift.close();
+  rushArm.close();
 
   Drive.turn(60, 100, .4);
   
@@ -1171,7 +1265,7 @@ void redNegElimKALA(){
 
 
   // Drive.moveDistance(63,100, 1.6);
-  // intakeLift.close();
+  // rushArm.close();
   // Drive.turn(-180, 100, .7);
   // intake_Group.spin(fwd, 100, pct);
   // Drive.swing(17, 100, -90, .9);
@@ -1294,10 +1388,10 @@ void bluePosElim(){
   // Drive.moveDistance(40, 100, 1);
   // Drive.turn(-270, 100, .7);
   // clamp.close();
-  // intakeLift.open();
+  // rushArm.open();
   // task I2 = task(intContAWP);
   // Drive.moveDistance(22.3, 100, .85);
-  // intakeLift.close();
+  // rushArm.close();
   // Drive.moveDistance(3.6, 30, .4);
   // Drive.moveDistance(-2.1, 100, .25);
   // Drive.swing(-15.3, 100, -435, 1.05);
@@ -1344,9 +1438,8 @@ int SNClamp(){
 }
 //DONE
 void simpleNegBlue(){
-  task intCont = task(intContSimple);
-  Drive.moveDistance( 27 , 60 , 1.2);	
-  intake_Group.stop();
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.moveDistance( 29 , 60 , 1.2);	
   Drive.turn( 90 , 100 , .65 );	
   task C1 = task(SNClamp);
   Drive.moveDistance( -22, 40 , 1 );	
@@ -1357,16 +1450,15 @@ void simpleNegBlue(){
 }
 //Done
 void simpleNegRed(){
-  task intCont = task(intContSimple);
-  Drive.moveDistance( 27 , 60 , 1.2);	
-  intake_Group.stop();
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.moveDistance( 29 , 60 , 1.2);	
   Drive.turn( -90 , 100 , .65 );	
   task C1 = task(SNClamp);
   Drive.moveDistance( -22 , 40 , 1 );	
   Drive.turn(45, 100, .9);
   intake_Group.spin(fwd, 100, pct);
   wait(3, sec);
-  Drive.moveDistance(10, 100, .8);
+  Drive.moveDistance(13, 100, .8);
 }
 int posClamp(){
   wait(.84, sec);
@@ -1375,25 +1467,27 @@ int posClamp(){
 }
 //DONE
 void simplePosBlue(){
-  Drive.moveDistance(10, 100, .7);
+  Drive.moveDistance(13, 100, .7);
   Drive.turn(-35, 100, .6);
-  task intCont = task(intContSimple);
-  Drive.moveDistance(23, 100, 1.1);
-  intake_Group.stop();
+  lowerIntake.spin(fwd, 100,pct);
+  Drive.moveDistance(20, 100, 1.1);
   Drive.turn( -90 , 100 , .8 );	
   task C1 = task(posClamp);
   Drive.moveDistance( -26 , 40 , 1.8);	
   Drive.turn(45, 100, .9);
-  intake_Group.spin(fwd, 100, pct);
+  upperIntake.spin(fwd, 100, pct);
   wait(3, sec);
-  Drive.moveDistance(10, 100, .8);
+  Drive.moveDistance(5, 100, .8);
+  lbState = 4;
+  task midstate = task (ladyBrownMechScoring);
+
 }
 //DONE
 void simplePosRed(){
-  Drive.moveDistance(10, 100, .7);
+  Drive.moveDistance(13, 100, .7);
   Drive.turn(35, 100, .6);
-  task intCont = task(intContSimple);
-  Drive.moveDistance(22.5, 100, 1.1);
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(20, 100, 1.1);
   intake_Group.stop();
   Drive.turn(90 , 100 , .8 );	
   task C1 = task(posClamp);
@@ -1540,7 +1634,7 @@ int intContAWPSkills(){
 }
 int upydown(){
   wait(.1, sec);
-  intakeLift.close();
+  rushArm.close();
   return(0);
 }
 int doubleSkills(){
@@ -1812,9 +1906,9 @@ void ringRushRed(){
   Drive.moveDistance(31, 60, 1.6);
   Drive.moveDistance(-10.5, 100, .7);
   Drive.turn(-270, 100, .6);
-  intakeLift.open();
+  rushArm.open();
   Drive.moveDistance(30, 100 , .9);
-  intakeLift.close();
+  rushArm.close();
   wait(.4, sec);
   Drive.moveDistance(-10, 100, .7);
   // clamp.close();
@@ -1867,11 +1961,11 @@ void ringRushBlue(){
   Drive.moveDistance(-10.5, 100, .7);
   intake_Group.spin(fwd, 100, pct);
   Drive.turn(260, 100, .6);
-  intakeLift.open();
+  rushArm.open();
   intake_Group.spin(fwd, 100, pct);
   Drive.moveDistance(31, 80 , 1.1);
   intake_Group.spin(fwd, 100, pct);
-  intakeLift.close();
+  rushArm.close();
   wait(.4, sec);
   Drive.moveDistance(-4, 100, .35);
   // clamp.close();
@@ -1901,11 +1995,11 @@ void PTFinals(){
   task ladyStake3 = task(ladyBrownMechScoring);
   wait(.3, sec);
   Drive.moveDistance(-5, 100, .4);
-  intakeLift.open();
+  rushArm.open();
   Drive.turn(95, 100, .7);
   intake_Group.spin(fwd, 100, pct);
   Drive.moveDistance(7, 70, .5);
-  intakeLift.close();
+  rushArm.close();
   Drive.moveDistance(-3, 100, .3);
   Drive.moveDistance(5, 100, .4);
   task iStop = task(intContAWP);
@@ -1962,9 +2056,7 @@ void wallstakePosRed(){
   task ladyStake2 = task(ladyBrownMechScoring);
   
 }
-void testing(){
-  Drive.turn(360, 100, 15);
-}
+
 
 int clampNPE(){
   wait(.7, sec);
@@ -2013,35 +2105,658 @@ void newPalElims(){
 
 
 }
+int rushArmRGRW(){
+  wait(.78, sec);
+  bonk.open();
+  return(0);
+}
+int rushArm2RGRW(){
+  wait(.4, sec);
+  bonk.close();
+  return(0);
+}
+int C1RGRW(){
+  wait(.8, sec);
+  clamp.open();
+  return(0);
+}
+
+int C1RRSW(){
+  wait(.8, sec);
+  clamp.open();
+  return(0);
+  
+}
+int newIntContStop(){
+  while (!Optical.isNearObject()){
+    upperIntake.spin(fwd, 20, pct);
+  }
+  upperIntake.stop();
+  return(0);
+}
+void redRingSideWorlds(){
+  task aJam = task (antiJam);
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  Drive.moveDistance(4, 100, .7);
+  
+  task C1 = task (C1RRSW);
+  Drive.swing(-30, 60, 10, .9);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  rushArm.open();
+  Drive.turn(180, 100, .95);
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.swing(18, 100, 128, .9);
+  upperIntake.spin(fwd, 100, pct);
+  rushArm.close();
+  Drive.moveDistance(18, 100, .8);
+  Drive.swing(-15, 100, 190, .7);
+  upperIntake.spin(fwd,100, pct);
+  Drive.swing(-19, 100, 210, .9);
+  upperIntake.stop();
+  Drive.turn(140, 100, .7);
+  upperIntake.spin(fwd,100, pct);
+  Drive.moveDistance(17, 100, .7);
+  Drive.turn(20, 100, .8);
+  lowerIntake.spin(fwd, 100, pct);
+  lbState = 5;
+  task nodq = task (ladyBrownMechScoring);
+  Drive.swing(14, 100, 68.5, .8);
+  upperIntake.spin(fwd,100, pct);
+
+  Drive.moveDistance(100, 60, 1);
+  upperIntake.spin(fwd,100, pct);
+  Drive.moveDistance(-13, 100, .7);
+  upperIntake.spin(fwd,100, pct);
+  Drive.moveDistance(7, 100, .4);
+  Drive.moveDistance(-7, 100, .4);
+  
+  Drive.turn(-60, 100, .9);
+  iLift.open();
+
+  Drive.swing(37, 100, -60, .85);
+  iLift.close();
+  wait(.15, sec);
+  Drive.moveDistance(-5, 100, .35);
+  lbState = 0;
+  task nobreaky = task (ladyBrownMechScoring);
+  Drive.turn(-140, 100, .6);
+  upperIntake.spin(fwd,100, pct);
+  Drive.swing(18, 100, -110, .8);
+}
+void blueRingSideWorlds(){
+  // task aJam = task (antiJam);
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  Drive.moveDistance(4, 100, .7);
+  
+  task C1 = task (C1RRSW);
+  Drive.swing(-31, 60, -10, .9);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  ringRush.open();
+  Drive.turn(-180, 100, .95);
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.swing(17.5, 100, -128, .9);
+  upperIntake.spin(fwd, 90, pct);
+  ringRush.close();
+  Drive.moveDistance(10, 100, .8);
+  Drive.swing(-7, 100, -190, .7);
+  Drive.swing(-19, 100, -210, .9);
+  Drive.turn(-140, 100, .4);
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(15, 100, .7);
+  Drive.turn(-20, 100, .8);
+  Drive.swing(15.5, 100, -68.5, .8);
+  lbState = 5;
+  task nodq = task (ladyBrownMechScoring);
+
+  Drive.moveDistance(100, 50, 1);
+  Drive.moveDistance(-13, 100, .7);
+  Drive.moveDistance(7, 100, .4);
+  Drive.moveDistance(-7, 100, .4);
+  
+  Drive.turn(60, 100, .9);
+  iLift.open();
+  lbState = 7;
+  task uppish = task (ladyBrownMechScoring);
+  Drive.swing(42, 100, 60, 1.1);
+  iLift.close();
+  Drive.moveDistance(-5, 100, .35);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.turn(140, 100, .6);
+  Drive.swing(18, 100, 110, .8); 
+  lbState = 4;
+  task touch = task (ladyBrownMechScoring);
+}
+
+int C2SSW(){
+  wait(1, sec);
+  clamp.open();
+  return(0);
+}
+void soloSigWorldsBlue(){
+  isRed = false;
+  task sort = task (colorReject);
+  Optical.setLightPower(100, pct);
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  Drive.moveDistance(4, 100, .4);
+  wait(.4, sec);
+  task C1 = task (C1RRSW);
+  Drive.swing(-30, 60, -10, 1.05);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  ringRush.open();
+  Drive.turn(-180, 100, .95);
+  lowerIntake.spin(fwd, 100, pct);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.swing(18.5, 100, -127, 1);
+  Drive.swing(15, 100, -134, .8);
+  Drive.swing(-11, 100, -190, .7);
+  upperIntake.spin(fwd,100, pct);
+  Drive.swing(-19, 100, -210, .9);
+  Drive.turn(-140, 100, .7);
+  upperIntake.stop();
+  ringRush.close();
+  Drive.moveDistance(17, 100, .7);
+  task I1 = task (newIntContStop);
+  Drive.turn(-340, 100, 1);
+  iLift.open();
+  Drive.swing(40.5, 100, -310, 1, 10, 16);
+  iLift.close();
+  wait(.175, sec);
+  Drive.moveDistance(-4, 100, .35);
+  clamp.close();
+  wait(.15, sec);
+  Drive.turn(-89, 100, 1);
+  task C2 = task (C2SSW);
+  Drive.moveDistance(-37, 60, 1.1);
+  Drive.turn(-115, 100, .5);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(20, 100, .8);
+
+
+}
+void soloSigWorldsRed(){
+  isRed = false;
+  task sort = task (colorReject);
+  Optical.setLightPower(100, pct);
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  Drive.moveDistance(4, 100, .4);
+  task nojam = task (autoJam);
+  wait(.3, sec);
+  task C1 = task (C1RRSW);
+  Drive.swing(-30, 60, 10, 1.05);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  rushArm.open();
+  Drive.turn(180, 100, .95);
+  lowerIntake.spin(fwd, 100, pct);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.swing(22.7, 100, 127, 1);
+  Drive.swing(18, 100, 134, .8);
+  Drive.swing(-14, 100, 190, .7);
+  upperIntake.spin(fwd,100, pct);
+  Drive.swing(-19, 100, 210, .9);
+  Drive.turn(140, 100, .7);
+  upperIntake.stop();
+  rushArm.close();
+  Drive.moveDistance(17, 100, .7);
+  task I1 = task (newIntContStop);
+  Drive.turn(340, 100, 1);
+  iLift.open();
+  Drive.swing(40.5, 100, 310, 1, 10, 16);
+  iLift.close();
+  wait(.175, sec);
+  Drive.moveDistance(-3, 100, .35);
+  clamp.close();
+  wait(.15, sec);
+  Drive.turn(88, 100, 1);
+  task C2 = task (C2SSW);
+  Drive.moveDistance(-37, 60, 1.1);
+  Drive.turn(115, 100, .5);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(20, 100, .8);
+}
+int PSSWC2(){
+  wait(.6, sec);
+  clamp.open();
+  return(0);
+}
+void posSoloSigWorldsBlue(){
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  Drive.moveDistance(4, 100, .4);
+  wait(.3, sec);
+  task C1 = task (C1RRSW);
+  Drive.swing(-31, 80, 10, 1);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  Drive.turn(130, 100, 1);
+  lowerIntake.spin(fwd, 100, pct);
+  task I1 = task (newIntContStop);
+  Drive.moveDistance(20, 100, 1);
+  upperIntake.stop();
+  Drive.turn(270,100, .8);
+  upperIntake.spin(fwd, 95,pct);
+  Drive.moveDistance(-5, 100, .6);
+  clamp.close();
+  wait(.15, sec);
+  Drive.moveDistance(13, 100, .8);
+  Drive.turn(355, 100, .6);
+  task C2 = task (PSSWC2);
+  Drive.moveDistance(-12.5, 100, .7);
+  Drive.moveDistance(10, 100, .6);
+  Drive.turn(293, 100, .6);
+  iLift.open();
+  Drive.moveDistance(26, 100, .9);
+  Drive.turn(253, 100, .4);
+  ringRush.open();
+
+  // Drive.swing(10, 100, 285, .7,0, 5);
+  // upperIntake.stop(coast);
+  // lowerIntake.stop();
+  // Drive.swing(24, 100, 257, 1);
+  // ringRush.open();
+  // wait(.2, sec);
+  // Drive.turn(220, 100, .2);
+  // rushArm.open();
+
+  
+}
+
+int RRRWC1(){
+  wait(.3, sec);
+  clamp.open();
+  return(0);
+}
+int comboTaskRRRW(){
+  lowerIntake.spin(fwd,100,pct);
+  wait(.2, sec);
+  // lbState = 0;
+  // task alliance = task (ladyBrownMechScoring);
+  wait(.2, sec);
+  ringRush.open();
+  //task I1 = task (newIntContStop);
+  return(0);
+}
+int unJam(){
+  upperIntake.spin(fwd, -100, pct);
+  wait(.15, sec);
+  upperIntake.spin(fwd, 100, pct);
+  // wait(.15, sec);
+  // upperIntake.spin(fwd, 100, pct);
+  return(0);
+}
+void redRingRushWorlds(){
+  task noJam = task (autoJam);
+  task start = task (comboTaskRRRW);
+  Drive.swing(42.5, 100, -40, 1.1, 20, 26);
+
+  // Drive.swing(-18, 80, -70, 1);
+  // task C1 = task (RRRWC1);
+  // Drive.moveDistance(-6, 100, .4);
+  // lbState = 0;
+  // task alliance = task (ladyBrownMechScoring);
+  // upperIntake.spin(fwd,100,pct);
+  // ringRush.close();
+  // wait(.1, sec);
+  // Drive.swing(8, 100, -90, .9);
+  // lowerIntake.spin(fwd, 100,pct);
+  // Drive.moveDistance(16, 100, .7);
+  // upperIntake.spin(fwd, 100,pct);
+  // Drive.turn(-170, 100, .8);
+
+
+  // upperIntake.spin(fwd, 100,pct);
+  // Drive.swing(30, 100, -135, 1);
+  // lowerIntake.spin(fwd, 100, pct);
+  // upperIntake.spin(fwd, 100,pct);
+  // // lbState = 5;
+  // // task stopRing = task (ladyBrownMechScoring);
+  // Drive.moveDistance(20, 40, .9);
+  // Drive.moveDistance(-10, 100, .7);
+  // Drive.moveDistance(4, 40, .5);
+
+
+  
+}
+int midRingDropR(){
+  wait(.65, sec);
+  rushArm.open();
+  return(0);
+}
+int midRingDropB(){
+  wait(.65, sec);
+  ringRush.open();
+  return(0);
+}
+
+void redMiddleAlliance(){
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  Drive.moveDistance(4, 100, .4);
+  task nojam = task(autoJam);
+  wait(.3, sec);
+  task C1 = task (C1RRSW);
+  Drive.swing(-32, 60, -10, 1);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  Drive.turn(98.3, 100, .9);
+  task D1 = task(midRingDropR);
+  iLift.open();
+  Drive.moveDistance(17.35, 100, .9);
+  wait(.1, sec);
+  Drive.turn(120, 100, .4);
+  Drive.swing(5.1, 100, 128, .5);
+  ringRush.open();
+  wait(.2, sec);
+  Drive.moveDistance(-35.1, 100, 1);
+  ringRush.close();
+  rushArm.close();
+  wait(.3, sec);
+  Drive.turn(58, 100, .7);
+  wait(.05, sec);
+  lowerIntake.spin(fwd, 100, pct);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(13.9, 100, .7);
+  Drive.moveDistance(-8.1, 80, .75);
+  iLift.close();
+  Drive.turn(130, 100, .6);
+  Drive.swing(10, 100, 225, 1, 2, 7);
+  task I2 = task(alwaysIntakeForRed);
+  Drive.moveDistance(35, 70, 1);
+  //10.15
+  lbState = 5;
+  task nodq = task (ladyBrownMechScoring);
+  Drive.turn(298, 100, .6);
+  ringRush.open();
+  Drive.swing(35, 100, 310, 1,15, 20);
+  Drive.turn(390, 100, .6);
+  ringRush.close();
+  Drive.moveDistance(10, 100, .7);
+  Drive.turn(454, 100, .6);
+  // clamp.close();
+  lbState = 6;
+  task touch = task (ladyBrownMechScoring);
+  Drive.moveDistance(40, 100, 1.2);
+  
+  
+}
+void blueMiddleAlliance(){
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  Drive.moveDistance(4, 100, .4);
+  task nojam = task(autoJam);
+  wait(.3, sec);
+  task C1 = task (C1RRSW);
+  Drive.swing(-32, 60, 10, 1);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  Drive.turn(-99, 100, .9);
+  task D1 = task(midRingDropB);
+  iLift.open();
+  Drive.moveDistance(17.3, 100, .9);
+  wait(.1, sec);
+  Drive.turn(-120, 100, .4);
+  Drive.swing(5.2, 100, -128, .5);
+  rushArm.open();
+  wait(.2, sec);
+  Drive.moveDistance(-35.1, 100, 1);
+  rushArm.close();
+  ringRush.close();
+  wait(.3, sec);
+  Drive.turn(-58, 100, .7);
+  wait(.05, sec);
+  lowerIntake.spin(fwd, 100, pct);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(14.3, 100, .7);
+  iLift.close();
+  wait(.1, sec);
+  Drive.moveDistance(-8.5, 80, .75);
+  Drive.turn(-130, 100, .6);
+  Drive.swing(10, 100, -225, 1, 2, 7);
+  task I2 = task(alwaysIntakeForRed);
+  Drive.moveDistance(35, 70, 1);
+  //10.15
+  Drive.turn(-298, 100, .6);
+  rushArm.open();
+  lbState = 5;
+  task nodq = task (ladyBrownMechScoring);
+  Drive.swing(35, 100, -310, 1,15, 20);
+  Drive.turn(-390, 100, .6);
+  rushArm.close();
+  Drive.moveDistance(10, 100, .6);
+  Drive.turn(-454, 100, .6);
+  // clamp.close();
+  lbState = 6;
+  task touch = task (ladyBrownMechScoring);
+  Drive.moveDistance(40, 100, 1.2);
+  
+  
+}
+int C1BGRW(){
+  wait(.6, sec);
+  clamp.open();
+  return(0);
+}
+int C2BGRW(){
+  wait(.8, sec);
+  clamp.open();
+  return(0);
+}
+void blueGoalRushWorlds(){
+  Optical.setLightPower(100, pct);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  rushArm.open();
+  Drive.swing(36.2, 100, 37, 1.1, 31, 36.2);
+  rushArm.close();
+  wait(.15, sec);
+  Drive.moveDistance(-3, 100, .4, true);
+  Drive.turn(60, 100, .7);
+  rushArm.open();
+  wait(.2, sec);
+  Drive.turn(70, 100, .2);
+  rushArm.close();
+  wait(.1, sec);
+  Drive.turn(135, 100, .35);
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(15, 100, .8);
+  Drive.moveDistance(-3.3, 100, .4);
+  Drive.turn(200, 100, .5);
+  task C1 = task (C1BGRW);
+  Drive.moveDistance(-10,60, .7);
+  upperIntake.spin(fwd, 100, pct);
+  wait(.5, sec);
+  task I1 = task (newIntContStop);
+  Drive.moveDistance(18.5, 100, .7);
+  Drive.turn(385, 100, 1);
+  clamp.close();
+  Drive.turn(270, 100, .9);
+  task C2 = task (C2BGRW);
+  Drive.moveDistance(-25, 60, .9);
+  upperIntake.spin(fwd, 100, pct);
+  wait(.5, sec);
+  upperIntake.stop();
+  // 8.25 sec
+  Drive.turn(407, 100, 1);
+  iLift.open();
+  ringRush.open();
+  Drive.moveDistance(18, 100, .8);
+  wait(.3, sec);
+  Drive.moveDistance(-20, 100, .8);
+  //10.85 sec
+  ringRush.close();
+  Drive.turn(390, 100, .3);
+  iLift.close();
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(15, 100, .7);
+
+
+}
+void redGoalRushWorlds(){
+  Optical.setLightPower(100, pct);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  ringRush.open();
+  Drive.swing(36.3, 100, -37, 1.1, 31, 36.3);
+  ringRush.close();
+  wait(.15, sec);
+  Drive.moveDistance(-3, 100, .4, true);
+  Drive.turn(-60, 100, .7);
+  ringRush.open();
+  wait(.2, sec);
+  Drive.turn(-70, 100, .2);
+  ringRush.close();
+  wait(.1, sec);
+  Drive.turn(-135, 100, .35);
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(16, 100, .8);
+  Drive.moveDistance(-4.3, 100, .4);
+  Drive.turn(-200, 100, .5);
+  task C1 = task (C1BGRW);
+  Drive.moveDistance(-10,60, .7);
+  upperIntake.spin(fwd, 100, pct);
+  wait(.5, sec);
+  task I1 = task (newIntContStop);
+  Drive.moveDistance(18.5, 100, .7);
+  Drive.turn(-385, 100, 1);
+  clamp.close();
+  Drive.turn(-270, 100, .9);
+  task C2 = task (C2BGRW);
+  Drive.moveDistance(-25, 60, .9);
+  upperIntake.spin(fwd, 100, pct);
+  wait(.5, sec);
+  upperIntake.stop();
+  // 8.25 sec
+  Drive.turn(-412, 100, 1);
+  iLift.open();
+  rushArm.open();
+  Drive.moveDistance(20, 100, .8);
+  wait(.3, sec);
+  Drive.moveDistance(-20, 100, .8);
+  //10.85 sec
+  rushArm.close();
+  Drive.turn(-390, 100, .3);
+  iLift.close();
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(15, 100, .7);
+
+
+}
+void testing(){
+  Drive.turn(-150, 100, 1);
+}
+void redRingRushWorldsbad(){
+  lowerIntake.spin(fwd, 100, pct);
+  rushArm.open();
+  task I1 = task (newIntContStop);
+  Drive.swing(44, 100, 37, 1,18, 23);
+  Drive.moveDistance(-6, 100, .4);
+  rushArm.close();
+
+
+}
+int C1SPWB(){
+  wait(.9, sec);
+  clamp.open();
+  return(0);
+}
+int C2SPWB(){
+  wait(.8, sec);
+  clamp.open();
+  return(0);
+}
+void posSoloWorldsBlue(){
+  lbState = 4;
+  task alliance = task (ladyBrownMechScoring);
+  wait(.7, sec);
+  Drive.moveDistance(-29, 100, 1);
+  lbState = 0;
+  task down = task (ladyBrownMechScoring);
+  Drive.moveDistance(3, 100, .3);
+  task I1 = task (newIntContStop);
+  Drive.turn(-140 , 80, 1.1);
+  lowerIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(26, 100, 1);
+  Drive.turn(-130, 100, .45);
+  lowerIntake.spin(fwd, -100, pct);
+  Drive.moveDistance(15, 100, .7);
+  rushArm.open();
+  wait(.55, sec);
+  Drive.moveDistance(-10, 40, .8);
+  rushArm.close();
+  wait(.2, sec);
+  Drive.turn(-295, 100, 1);
+  task C1 = task (C1SPWB);
+  Drive.moveDistance(-14, 40, 1);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(5, 100, .4);
+  wait(.3, sec);
+  clamp.close();
+  Drive.moveDistance(9, 100, .55);
+  upperIntake.stop();
+  Drive.turn(-210, 100, .7);
+  task C2 = task (C2SPWB);
+  Drive.moveDistance(-24, 60, 1);
+  Drive.turn(-248, 100, .4);
+  lowerIntake.spin(fwd, 100, pct);
+  upperIntake.spin(fwd, 100, pct);
+  Drive.moveDistance(45, 100, 1);
+  Drive.moveDistance(9, 40, .7);
+  Drive.moveDistance(-14, 100, .7);
+  iLift.open();
+  Drive.turn(-248-135, 100, .8);
+  Drive.moveDistance(40, 100, 1);
+  
+
+  // wait(.2, sec);
+  // Drive.moveDistance(-30, 100, .9);
+
+
+
+
+
+
+  
+}
 
 
 void (*autonsList[])() =
 {
-  simplePosRed, //DONE Preload at bottom of intake_Group on a hook
-  simHitSkills, // Done
-  simpleNegRed,//DONE
-  simpleNegBlue,//DONE 
-  redNegElim,// Needs Tuning Est: 30 minutes + Color sort 
-  soloSig, // Needs redesigned route Est 2 hours 
-  bluePosElim, // Done 
-  redPosElim, // Done
-  blueNegElim,//DONE STRAIGHT AT RING
-  fractalRightStart,
-  simplePosBlue,//DONE Preload at bottom of intake_Group on a hook
-  newPalElims,
-  fractalLeftStart,
-  ringRushRed, 
-  secondHalfSkills,
+
+  blueGoalRushWorlds,// DONE on hook
+  redGoalRushWorlds,
+  
+  
+  redMiddleAlliance,//DONE in LB
+  blueMiddleAlliance,// DONE in LB
+  
+  redRingSideWorlds, //DONE in LB
+  blueRingSideWorlds, //DONE in LB
+  
+  
+  soloSigWorldsRed, // DONE in LB
+  soloSigWorldsBlue, // DONE in LB
+  
+  
   testing,
-  wallstakePosRed,
-  wallstakePosBlue,
-  ringRushBlue,
-  blueClampRush,
-  redNegElimKALA, //DONE READY Straight at ring
-  mogoRushBlue,
   
   
+  posSoloWorldsBlue,
+
+
+  simpleNegRed,//DONE on hook front wheel screw joint
+  simplePosBlue,//DONE on hook front wheel screw joint
+  simplePosRed, //DONE on hook front wheel screw joint
+  simpleNegBlue,//DONE on hook front wheel screw joint
   
+  simHitSkills, // Done
+ 
   
 
 };
@@ -2071,7 +2786,7 @@ int conInfo()
     con.Screen.print("Bat");
     con.Screen.print(Brain.Battery.capacity(percent));
     con.Screen.print("   Int:");
-    con.Screen.print((upperIntake.temperature(fahrenheit) + lowerIntake.temperature(fahrenheit))/2);
+    con.Screen.print((upperIntake.temperature(fahrenheit)));
     con.Screen.setCursor(2, 1);
     con.Screen.print("Left  ");
     con.Screen.print((left1.temperature(fahrenheit) + left2.temperature(fahrenheit) + left3.temperature(fahrenheit)) / 3);
@@ -2099,16 +2814,16 @@ void usercontrol()
   // lbState = 0;
   // task ringOne1 = task(ladyBrownMechScoring);
 
-  // isRed = true;
-  // task cReject = task(colorReject);
+  isRed = true;
+  task cReject = task(colorReject);
   task printcon = task(conInfo);
   wait(.01, sec);
-  task noJamPorFavor = task(antiJam);
+  //task noJamPorFavor = task(antiJam);
   while (true)
   {
     // if (!(lbState == 1) && f13loop){
 
-    //   task noJam = task(antiJam);
+    // task noJam = task(antiJam);
     //   f13loop = false;
     // }
 
@@ -2136,17 +2851,13 @@ void usercontrol()
 
     // controls the speed at which the robot moves
     // moving controls
-    if (!con.ButtonA.pressing()){
-      rightdrive.spin(fwd, con.Axis2.value(), pct);
-      leftdrive.spin(fwd, con.Axis3.value(), pct);
-    }
-    else {
-      rightdrive.spin(fwd, -10, pct);
-      leftdrive.spin(fwd, -10, pct);
-    }
+    rightdrive.spin(fwd, con.Axis2.value(), pct);
+    leftdrive.spin(fwd, con.Axis3.value(), pct);
+   
     if (con.ButtonLeft.pressing()){
-      Drive.moveDistance(2.1, 100, .3);
-      intake_Group.spin(fwd, 100, pct);
+      Drive.moveDistance(-6, 100, .4);
+    lbState = 4;
+    task stopRing = task (ladyBrownMechScoring);
     }
     // intake_Group control
     if (!reject){
@@ -2173,10 +2884,13 @@ void usercontrol()
     if (con.ButtonL2.pressing()){
       lbState = 0;
       task ladyBrownZero = task(ladyBrownMechScoring);
+      lbup = false;
     }
     else if (con.ButtonUp.pressing()){
       lbState = 3;
+      task intContLB = task (lbIntake);
       task ladyBrownZero = task(ladyBrownMechScoring);
+      lbup=true;
     }
     else if (con.ButtonL1.pressing()){
       if (f9loop){
@@ -2187,14 +2901,27 @@ void usercontrol()
         lbState = 1;
         f13loop = true;
       }
+      if (lbState == 2){
+        lbup=true;
+      }
+      task intContLB = task (lbIntake);
       task ladyBrownIntake = task(ladyBrownMechScoring);
     }
     else if (con.ButtonRight.pressing()){
       lbState = 4;
       task ladyBrownDescore = task(ladyBrownMechScoring);
+      lbup = true;
     }
     else{
       f9loop = true;
+    // }
+    // if (lbup && !Optical.isNearObject()){
+    //   lowerIntake.spin(fwd, 100, pct);
+    //   upperIntake.spin(fwd, 100, pct);
+    // }
+    // else if (lbup && Optical.isNearObject()){
+    //   lowerIntake.spin(fwd, 100, pct);
+    //   upperIntake.spin(fwd, 100, pct);
     }
 
     //clamp control
@@ -2229,10 +2956,10 @@ void usercontrol()
 
     if (con.ButtonDown.pressing()){
       if (f14loop){
-        ringRush.open();
+        ringRush.close();
       }
       if (!f14loop){
-        ringRush.close();
+        ringRush.open();
       }
       f15loop = true;
     }
@@ -2243,12 +2970,12 @@ void usercontrol()
 
 
     //intakelift
-    if (con.ButtonB.pressing()){
+    if (con.ButtonX.pressing()){
       if (f7loop){
-        intakeLift.open();
+        iLift.open();
       }
       if (!f7loop){
-        intakeLift.close();
+        iLift.close();
       }
       f8loop = true;
     }
@@ -2256,9 +2983,24 @@ void usercontrol()
       f7loop = !f7loop;
       f8loop = false;
     }
+    if (con.ButtonB.pressing()){
+      if (f17loop){
+        rushArm.open();
+      }
+      if (!f17loop){
+        rushArm.close();
+      }
+      f16loop = true;
+    }
+    else if (f16loop){
+      f17loop = !f17loop;
+      f16loop = false;
+    }
   }
 
-  wait (20, msec); //prevent system overload 
+
+
+  wait(20, msec); //prevent system overload 
 }
 
 //

@@ -79,6 +79,10 @@ class drivetrainObj
          * @param maxSpeed The maximum speed to use. (pct 0-100)
          * @param timeout The maximum time to allow for the turn. (seconds)
          */
+
+         void swing(double targetDistance, double maxSpeed, double targetAngle, double timeout, double startCurvDist, double endCurvDist);
+
+         void doubleSwing(double targetDistance, double maxSpeed, double targetAngle, double timeout, double startCurvDist, double endCurvDist,  double startCurvDist2, double endCurvDist2,  double targetangle2);
         void turn(double targetAngle, double maxSpeed, double timeout);
 
     private:

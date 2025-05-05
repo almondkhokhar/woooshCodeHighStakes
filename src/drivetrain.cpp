@@ -128,7 +128,7 @@ void drivetrainObj::moveDistanceTimeout(double targetDistance, double maxSpeed, 
             runRightSide(output);
         }
         
-        if (encoderDistance -.05 > prevVal){
+        if (encoderDistance > prevVal){
             counter +=1;
 
         }
@@ -189,6 +189,115 @@ void drivetrainObj::swing(double targetDistance, double maxSpeed, double targetA
     stopLeftSide(vex::brakeType::coast);
     stopRightSide(vex::brakeType::coast);
 }
+void drivetrainObj::swing(double targetDistance, double maxSpeed, double targetAngle, double timeout, double startCurvDist, double endCurvDist)
+{
+    // initalize objects for PID control
+    MiniPID distanceControl(1100, 5, 5000);
+    MiniPID headingControl(150, 2, 2000);
+    // configure pid controls
+    distanceControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+    headingControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+
+    // track inital values to use for calculating total change
+    double startPos = getDriveEncoderValue();
+    double startAngle = Inertial.rotation(deg);
+    double startTime = vex::timer::system();
+    double currTargetAngle = Inertial.rotation(deg);
+
+    // condition exits loops after some amount of time has passed
+    while (vex::timer::system() - startTime <= timeout * 1000)
+    {
+        // calculate the total distance the encoder has traveled in degrees
+        double encoderDistance = getDriveEncoderValue() - startPos;
+        // converts the encoder distance to inches traveled
+        double travelDistance = angularDistanceToLinearDistance(encoderDistance, wheelDiameter, gearRatio);
+        // stores the current heading of the robot
+        double actualAngle = Inertial.rotation(deg);
+        // cacluates the percent of distance driven to target distance
+        double fracComplete = travelDistance / targetDistance;
+        // sets current target angle to that percentage between the start agnle and the final target angle
+        if ((travelDistance > (startCurvDist)) && (travelDistance < endCurvDist)){
+            currTargetAngle = (targetAngle - startAngle) * ((travelDistance-startCurvDist)/(endCurvDist-startCurvDist)) + startAngle;
+            //currTargetAngle = (targetAngle - startAngle) * (startCurvDist/endCurvDist) + startAngle;
+
+        }
+        // gets ouptput from pid controller for travel speed
+        double output = distanceControl.getOutput(travelDistance, targetDistance);
+        // gets output from pid controller for turning speed
+        double correctionFactor = headingControl.getOutput(actualAngle, currTargetAngle);
+
+        // sends command to run motors at desired speeds
+        if ((travelDistance > (startCurvDist)) && (travelDistance < endCurvDist)){
+            runLeftSide(output + 5*correctionFactor);
+            runRightSide(output - 5*correctionFactor);
+        }
+        else{
+            runLeftSide(output + correctionFactor);
+            runRightSide(output - correctionFactor);
+        }
+        wait(20, msec);
+    }
+    stopLeftSide(vex::brakeType::coast);
+    stopRightSide(vex::brakeType::coast);
+}
+void drivetrainObj::doubleSwing(double targetDistance, double maxSpeed, double targetAngle, double timeout, double startCurvDist, double endCurvDist, double startCurvDist2, double endCurvDist2, double targetAngle2)
+{
+    // initalize objects for PID control
+    MiniPID distanceControl(1100, 5, 5000);
+    MiniPID headingControl(150, 2, 2000);
+    // configure pid controls
+    distanceControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+    headingControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
+
+    // track inital values to use for calculating total change
+    double startPos = getDriveEncoderValue();
+    double startAngle = Inertial.rotation(deg);
+    double startTime = vex::timer::system();
+    double currTargetAngle = Inertial.rotation(deg);
+
+    // condition exits loops after some amount of time has passed
+    while (vex::timer::system() - startTime <= timeout * 1000)
+    {
+        // calculate the total distance the encoder has traveled in degrees
+        double encoderDistance = getDriveEncoderValue() - startPos;
+        // converts the encoder distance to inches traveled
+        double travelDistance = angularDistanceToLinearDistance(encoderDistance, wheelDiameter, gearRatio);
+        // stores the current heading of the robot
+        double actualAngle = Inertial.rotation(deg);
+        // cacluates the percent of distance driven to target distance
+        double fracComplete = travelDistance / targetDistance;
+        // sets current target angle to that percentage between the start agnle and the final target angle
+        if ((travelDistance > (startCurvDist)) && (travelDistance < endCurvDist)){
+            currTargetAngle = (targetAngle - startAngle) * ((travelDistance-startCurvDist)/(endCurvDist-startCurvDist)) + startAngle;
+            //currTargetAngle = (targetAngle - startAngle) * (startCurvDist/endCurvDist) + startAngle;
+
+        }
+        else if ((travelDistance > (startCurvDist2)) && (travelDistance < endCurvDist2)){
+            currTargetAngle = (targetAngle2 - targetAngle) * ((travelDistance-startCurvDist2)/(endCurvDist2-startCurvDist2)) + startAngle;
+        }
+        // gets ouptput from pid controller for travel speed
+        double output = distanceControl.getOutput(travelDistance, targetDistance);
+        // gets output from pid controller for turning speed
+        double correctionFactor = headingControl.getOutput(actualAngle, currTargetAngle);
+
+        // sends command to run motors at desired speeds
+        if ((travelDistance > (startCurvDist)) && (travelDistance < endCurvDist)){
+            runLeftSide(output + 5*correctionFactor);
+            runRightSide(output - 5*correctionFactor);
+        }
+        else if ((travelDistance > (startCurvDist2)) && (travelDistance < endCurvDist2)){
+            runLeftSide(output + 5*correctionFactor);
+            runRightSide(output - 5*correctionFactor);
+        }
+        else {
+            runLeftSide(output + correctionFactor);
+            runRightSide(output - correctionFactor);
+        }
+        wait(20, msec);
+    }
+    stopLeftSide(vex::brakeType::coast);
+    stopRightSide(vex::brakeType::coast);
+}
 
 void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
 {
@@ -218,7 +327,7 @@ void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
         runLeftSide(output);
         runRightSide(-output);
         wait(10, msec);
-        printf("\n%f", Inertial.rotation(deg));
+        // printf("\n%f", Inertial.rotation(deg));
         
     }
     stopLeftSide(vex::brakeType::coast);
@@ -231,12 +340,12 @@ void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
 
 double drivetrainObj::getLeftDriveEncoderValue()
 {
-    return (left1.position(deg)+left2.position(deg))/2;
+    return (left1.position(deg)+left3.position(deg))/2;
 }
 
 double drivetrainObj::getRightDriveEncoderValue()
 {
-    return (right2.position(deg)+right2.position(deg))/2;
+    return (right2.position(deg)+right1.position(deg))/2;
 }
 
 double drivetrainObj::getDriveEncoderValue()
