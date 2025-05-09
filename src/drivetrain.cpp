@@ -302,7 +302,7 @@ void drivetrainObj::doubleSwing(double targetDistance, double maxSpeed, double t
 void drivetrainObj::turn(double targetAngle, double maxSpeed, double timeout)
 {
     // initalize object for PID control
-    MiniPID angleControl(350, 20, 5000);
+    MiniPID angleControl(300, 20, 5500);
     // configure PID controller
     angleControl.setOutputLimits(-120 * maxSpeed, 120 * maxSpeed);
     angleControl.setMaxIOutput(0);
